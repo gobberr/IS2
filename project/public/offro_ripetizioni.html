@@ -10,24 +10,24 @@
 <body>
   <nav class="navbar navbar-expand-md bg-secondary navbar-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">Home</a>
+      <a class="navbar-brand bg-secondary" href="index.html">Home</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="cerca">Cerco ripetizioni</a>
+            <a class="nav-link" href="cerco_ripetizioni.html">Cerco ripetizioni</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="offri">Offro ripetizioni</a>
+            <a class="nav-link active" href="#">Offro ripetizioni</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Chi siamo</a>
           </li>
         </ul>
-        <a href="login">
+        <a href="login.html">
           <button type="button" class="btn btn-primary m-2">Accedi</button>
         </a>
-        <a href="registrati">
+        <a href="registration.html">
           <button class="btn btn-primary" type="submit">Registrati</button>
         </a>
       </div>
@@ -53,8 +53,12 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <p class="">Benvenuto nella Home Page!&nbsp;
-            <br> </p>
+          <form class="" method="post" action="https://formspree.io/">
+            <div class="form-group"> <label>Che corso offri?</label>
+              <input type="text" name="corso" class="form-control" placeholder="Es: Analisi Matematica 1"> </div>
+            <div class="form-group"> <label>In che zona?</label>
+              <input type="text" name="zona" class="form-control" placeholder="Es: Trento, 30110"> </div>
+          </form>
         </div>
       </div>
     </div>
@@ -63,10 +67,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <ul class="">
-            <li>Se sei uno studente che cerca ripetizioni recati nell'area "Cerco ripetizioni" ed inserisci la materia</li>
-            <li>Se sei uno studente che offre ripetizioni recati nell'are "Offro ripetizioni" ed inserisci per quale/i materia/e</li>
-          </ul>
+          <p class="lead py-0">Disponibilità giorni:</p>
         </div>
       </div>
     </div>
@@ -74,47 +75,19 @@
   <div class="py-5">
     <div class="container">
       <div class="row">
-        <div class="col-md-6">
-          <img class="d-block img-fluid" src="https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyDW8nO9JhT_pEjebobq9pgUF2cEp0EUb1I&amp;markers=Trento&amp;center=Trento%0ATrento&amp;zoom=14%0A14%0A14%0A14&amp;size=640x480&amp;sensor=false"> </div>
-        <div class="col-md-6">
-          <p class="lead text-left">Ripetizioni UniTN utilizza la tua posizione per trovare tutor nelle tue vicinanze </p>
+        <div class="col-md-12">
+          <img class="img-fluid d-block" src="calendar.png">
         </div>
       </div>
     </div>
   </div>
-  <div class="text-white bg-secondary">
+  <div class="py-5">
     <div class="container">
       <div class="row">
-        <div class="p-4 col-md-4">
-          <h2 class="mb-4 text-light">Ripetizioni UniTN</h2>
-          <p class="text-white">Il nostro scopo è aiutarti a trovare aiuto per preparare gli esami
+        <div class="col-md-12">
+          <a href="#" class="btn btn-outline-primary btn-lg">Proponiti
             <br>
-            <br>Povo, TN</p>
-        </div>
-        <div class="p-4 col-md-4">
-          <h2 class="mb-4 text-light">Mapsite</h2>
-          <ul class="list-unstyled">
-            <a href="#" class="text-white">Home</a>
-            <br>
-            <a href="#" class="text-white">About us</a>
-            <br>
-            <a href="#" class="text-white">Our services</a>
-            <br>
-            <a href="#" class="text-white">Stories</a>
-          </ul>
-        </div>
-        <div class="p-4 col-md-4">
-          <h2 class="mb-4 text-light">Newsletter</h2>
-          <form>
-            <fieldset class="form-group text-white"> <label for="exampleInputEmail1">Inserisci la tua mail per restare aggiornato sugli annunci</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="nome.cognome@studenti.unitn.it"> </fieldset>
-            <button type="submit" class="btn btn-outline-secondary">Registrati</button>
-          </form>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 mt-3">
-          <p class="text-center text-white">© Copyright 2017 Ripetizioni UniTN - All rights reserved. </p>
+          </a>
         </div>
       </div>
     </div>
