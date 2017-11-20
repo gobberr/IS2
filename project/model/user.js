@@ -14,7 +14,7 @@ var userSchema = new Schema({
     latitude: Double,
     longitude: Double,
   },
-  born: Date,
+  dob: { type: Date, required: true },
   created_at: Date,
   updated_at: Date
 });
