@@ -1,16 +1,16 @@
 var express = require('express');
 var router = express.Router();
+const pug = require('pug');
 
+router.get("/", function(req,res,next){res.write(pug.renderFile("views/index.pug"));});
 
-router.get("/", function(req,res){ res.sendFile("index.html", {root: "public"})});
+router.get("/cerco", function(req,res){res.write(pug.renderFile("views/cerco.pug"));});
 
-router.get("/cerca", function(req,res){res.sendFile("cerco_ripetizioni.html",{ root : "public"})});
+router.get("/login", function(req,res){res.write(pug.renderFile("views/login.pug"));});
 
-router.get("/login", function(req,res){res.sendFile("login.html",{ root : "public"})});
+router.get("/registrati", function(req,res){res.write(pug.renderFile("views/registration.pug"));});
 
-router.get("/registrati", function(req,res){res.sendFile("registrati.html",{ root : "public"})});
-
-router.get("/offri", function(req,res){res.sendFile("offro_ripetizioni.html",{ root : "public"})});
+router.get("/offro", function(req,res){res.write(pug.renderFile("views/offro.pug"));});
 
 
 module.exports = router;

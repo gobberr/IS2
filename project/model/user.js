@@ -11,10 +11,10 @@ var userSchema = new Schema({
   cld: String,
   location: {
     description: String,
-    latitude: Double,
-    longitude: Double,
+    latitude: String,
+    longitude: String,
   },
-  dob: { type: Date, required: true },
+  dob: { type: Date, /*required: true*/ },
   created_at: Date,
   updated_at: Date
 });
