@@ -13,6 +13,8 @@ router.get("/registrati", function(req,res){res.write(pug.renderFile("views/regi
 
 router.get("/offro", function(req,res){res.write(pug.renderFile("views/offro.pug"));});
 
+router.get("/annuncio", function(req,res){res.write(pug.renderFile("views/annuncio.pug"));});
+
 router.use("/test", test);
 
 module.exports = router;
