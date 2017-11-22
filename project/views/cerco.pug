@@ -74,12 +74,10 @@ head
     |             
     .row
       .col-md-12
-        ul
-          li(contenteditable='true') Annuncio 1
-          |                         
-          li Annuncio 2
-          |                         
-          li Annuncio 3
+        - var values = [];
+          ul
+            each val in values.length ? values : ['Nessun annuncio disponibile']
+              li= val
 
 |     
 
