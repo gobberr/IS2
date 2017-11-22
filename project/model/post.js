@@ -7,6 +7,11 @@ var postSchema = new Schema({
   text: { type: String, required: true },
   email: { type: String, required: true }, // per fare riferimento all'utente che ha creato il post
   subject: { type: String, required: true },
+  location: {
+    description: String,
+    latitude: String,
+    longitude: String,
+  },
 });
 
 // the schema is useless so far

@@ -8,12 +8,7 @@ var userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   telephone: Number,
-  cld: String,
-  location: {
-    description: String,
-    latitude: String,
-    longitude: String,
-  },
+  cdl: String,
   dob: { type: Date, /*required: true*/ },
   created_at: Date,
   updated_at: Date
