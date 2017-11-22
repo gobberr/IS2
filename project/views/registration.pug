@@ -29,26 +29,26 @@ head
           .card-body
             h1.mb-4 Registrazione al servizio
             |                             
-            form(action='https://formspree.io/YOUREMAILHERE')
+            form(action='/test/registrazione', method="POST")
               .form-group
                 label Nome
                 |                                     
-                input.form-control(type='text', placeholder='Inserisci il tuo nome')
+                input.form-control(type='text', placeholder='Inserisci il tuo nome', name="nome")
               |                                 
               .form-group
                 label Cognome
                 |                                     
-                input.form-control(type='text', placeholder='Inserisci il tuo cognome')
+                input.form-control(type='text', placeholder='Inserisci il tuo cognome', name="cognome")
               |                                 
               .form-group
                 label Email universitaria
                 |                                     
-                input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it')
+                input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it', name="email")
               |                                 
               .form-group
                 label Password
                 |                                     
-                input.form-control(type='password', placeholder='Password')
+                input.form-control(type='password', placeholder='Password', name="password")
               |                                 
               button.btn.btn-secondary(type='submit') Registrati
         |                     
