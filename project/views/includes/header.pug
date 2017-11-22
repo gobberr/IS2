@@ -24,12 +24,20 @@ nav.navbar.navbar-expand-md.bg-secondary.navbar-dark
         |                     
         li.nav-item
           a.nav-link.active(href='#') Chi siamo
-      |                 
-      a(href='/login')
-        button.btn.btn-primary.m-2(type='button') Accedi
-      |                 
-      a(href='/registrati')
-        button.btn.btn-primary(type='submit') Registrati
+      |
+
+      - var user = { name: 'GinoTheSpazzino' }
+      - var logged = false
+
+      if logged 
+          a(href='/account')
+            button.btn.btn-primary(type='submit') Il mio account
+      else 
+          a(href='/login')
+            button.btn.btn-primary.m-2(type='button') Accedi          
+          a(href='/registrati')
+            button.btn.btn-primary(type='submit') Registrati          
+          |
 |     
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 |     
