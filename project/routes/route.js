@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const pug = require('pug');
+var test = require("./test");
 
 router.get("/", function(req,res,next){res.write(pug.renderFile("views/index.pug"));});
 
@@ -12,5 +13,6 @@ router.get("/registrati", function(req,res){res.write(pug.renderFile("views/regi
 
 router.get("/offro", function(req,res){res.write(pug.renderFile("views/offro.pug"));});
 
+router.use("/test", test);
 
 module.exports = router;
