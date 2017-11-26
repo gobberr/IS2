@@ -6,6 +6,7 @@ var reviewSchema = new Schema({
   reviewer: { type: String, required: true },
   revised: { type: String, required: true },
   vote: { type: Number, required: true },
+  text: String,
 });
 
 // the schema is useless so far

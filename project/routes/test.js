@@ -20,14 +20,14 @@ router.post("/registrazione", function(req,res){
     domain = email.split("@");
     if(domain[1]==="unitn.it"|| domain[1]==="studenti.unitn.it"||domain[1]==="alumni.unitn.it")
     {
-    console.log(mongoose.connection.readyState);
-    user.name = req.body.nome;
-    user.surname = req.body.cognome;
-    
-    user.email=email;
-    user.password = req.body.password;
-    user.save(function(err){if(err) throw err; else console.log("utente aggiunto");}); 
-    res.write(pug.renderFile("views/index.pug"));
+        console.log(mongoose.connection.readyState);
+        user.name = req.body.nome;
+        user.surname = req.body.cognome;
+        
+        user.email=email;
+        user.password = req.body.password;
+        user.save(function(err){if(err) throw err; else console.log("utente aggiunto");}); 
+        res.redirect('/test/successfullyRegistered');
     }
     else
     res.send("Email non valida");
@@ -37,6 +37,13 @@ router.post("/registrazione", function(req,res){
 router.post("/login"), function(req,res){
     
 }
+
+router.get("/successfullyRegistered", function(req,res){
+    var text="Registrazione avvenuta con successo."
+    res.write(pug.renderFile("views/success.pug", {
+        text: text
+    }));
+});
 
 /*function registra(req,res)
 {
