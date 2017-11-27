@@ -34,9 +34,17 @@ router.post("/registrazione", function(req,res){
 });
     
 
-router.post("/login"), function(req,res){
-    
-}
+router.post("/login", function(req,res){
+    var email = req.body.email;
+    var password = req.body.password;    
+    // find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
+    User.findOne({email: email, password: password}, function (err, user) {
+      if (err) return err;
+        //console.log(user.email); // Space Ghost is a talk show host.
+        if(user != null) res.redirect('/test/successfullyRegistered');        
+        else res.redirect('/');
+    });
+});
 
 router.get("/successfullyRegistered", function(req,res){
     var text="Registrazione avvenuta con successo."
@@ -51,3 +59,4 @@ router.get("/successfullyRegistered", function(req,res){
     return;
 }*/
 module.exports = router;
+console.log("server avviato");

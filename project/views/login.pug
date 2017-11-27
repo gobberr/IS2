@@ -10,27 +10,31 @@ head
   link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
 include includes/navbar.pug
 include includes/jumbotron-light.pug
+
 .py-5
   .container
     .row
       .col-md-12
+        -var error=true
+        if error
+          div.alert.alert-danger Le credenziali inserite non sono corrette! 
         .card.text-white.bg-primary.p-1.text-left
           .card-body.rounded-bottom
             h1.mb-4 Accesso al servizio
             |                             
-            form(action='https://idp.unitn.it/idp/profile/SAML2/Redirect/SSO?execution=e1s1')
+            form(action='/test/login', method="POST")
               .form-group
                 label Email
                 |                                     
-                .row
+                .row.mb-2
                   .col-9
-                    input.form-control(type='email', placeholder='email')
+                    input.form-control(type='email', placeholder='La Tua Email Universitaria' name='email' required)
                   |                                         
                 label Password
                 |                                     
                 .row
                   .col-9
-                    input.form-control(type='Password', placeholder='password')
+                    input.form-control(type='password', placeholder='La Tua Password' name='password' required)
               |                                 
               button.btn.btn-secondary(type='submit') Accedi!
 |

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var bcrypt   = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 
 // create a schema
@@ -13,6 +14,8 @@ var userSchema = new Schema({
   created_at: Date,
   updated_at: Date
 });
+
+
 
 // the schema is useless so far
 // we need to create a model using it
