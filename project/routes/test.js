@@ -119,6 +119,23 @@ router.get('/profile', function (req, res, next) {
 });
 
 
+router.post("/addPost", function(req,res,next){
+	var postData = {
+            email: req.body.email,
+            subject: req.body.subject,
+            text: req.body.text         
+        }
+	Corso.create(postData, function (error, user) {
+                if (error) {
+                    return next(error);
+                }
+                else {
+                    console.log("post creato");
+                    return res.redirect('/addPost');
+                }
+            });
+	//res.write(pug.renderFile("views/addPost.pug"));
+});
 
 
 router.get("/successfullyRegistered", function(req,res){
@@ -134,21 +151,22 @@ router.get("/successfullyRegistered", function(req,res){
     return;
 }*/
 
-router.post("/cerca", function(req,res,next){
+/*router.post("/cerca", function(req,res,next){
 	var subject = req.body.subject;
-	var location = req.body.location;
+	//var location = req.body.location;
 	
-	Corso.find(subject, longitude, latitude, function (error, user) {
+	Corso.find(subject, function (error, post) {
         if (error || !subject) {
             //non ci sono post con questa materia nella zona selezionata
 			//visualizza i più vicini in altre zone, con la stessa materia (?)
         } 
         else {
+			console.log("query success, " + subject);
 			//da inserire parametro per stampare "ricerca senza risultati"
-            return res.redirect('../views/cerco');
+            return res.redirect('/cerco');
         }
     });
-});
+});*/
 
 module.exports = router;
 console.log("server avviato");

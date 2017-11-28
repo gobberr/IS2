@@ -21,7 +21,9 @@ include includes/jumbotron-light.pug
   .container
     .row
       .col-md-6
-        form(method='POST', action='/test/cerca')
+        //rimanda alla stessa pagina ma con i parametri della form
+        //DA AGGIUNGERE FILTRI
+        form(method='POST', action='/cerco')
           .form-group
             label Che corso cerchi?
             |                             
@@ -62,6 +64,12 @@ include includes/jumbotron-light.pug
         .row
           .col-md-6
             h1 Risultati trovati:
+            //stampa i risultati della query
+            //DA AGGIUNGERE migliore template per visualizzare gli annunci
+            //CON link per ogni annuncio per vederne i dettagli
+            each val in values
+              h1 email: #{val.email}
+              h1 materia: #{val.subject}
           |                         
           .col-md-6
             .btn-group
@@ -76,10 +84,6 @@ include includes/jumbotron-light.pug
     |             
     .row
       .col-md-12
-        - var values = [];
-          ul
-            each val in values.length ? values : ['Nessun annuncio disponibile']
-              li= val
 
 |     
 
