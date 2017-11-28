@@ -21,16 +21,16 @@ include includes/jumbotron-light.pug
   .container
     .row
       .col-md-6
-        form(method='post', action='https://formspree.io/')
+        form(method='POST', action='/test/cerca')
           .form-group
             label Che corso cerchi?
             |                             
-            input.form-control(type='text', name='corso', placeholder='Es: Analisi Matematica 1')
+            input.form-control(type='text', name='subject', placeholder='Es: Analisi Matematica 1')
           |                         
           .form-group
             label In che zona?
             |                             
-            input.form-control(type='text', name='zona', placeholder='Es: Trento, 38121')
+            input.form-control(type='text', name='location', placeholder='Es: Trento, 38121')
           |                         
           fieldset.form-group
             label.form-control-label Raggio di ricerca

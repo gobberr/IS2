@@ -18,5 +18,28 @@ var postSchema = new Schema({
 // we need to create a model using it
 var Post = mongoose.model('Message', postSchema);
 
+//funzione che trova un annuncio
+postSchema.statics.find = function (subject, location, /*long, latit*/callback) {
+	Post.find({ subject: subject, 
+			   location: 
+			   {
+				   //così trova la città con lo stesso nome
+				   description : location
+				   
+				   //da cambiare con range di coordinate
+				   //latitude : parseFloat(long.replace(",", ".")), 
+				   //longitude : parseFloat(latit.replace(",", "."))
+			  	}
+			  })
+	.exec(function (err, post) {
+      if (err) {
+        return callback(err)
+      } else if (!post) {
+        err.status = 401;
+        return callback(err);
+      }
+	});
+}
+
 // make this available to our users in our Node applications
 module.exports = Post;

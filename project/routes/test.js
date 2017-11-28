@@ -9,6 +9,7 @@ mongoose.connect('mongodb://dbprogetto:progettois2@ds145293.mlab.com:45293/prova
 router.use(bodyParser.json()); // support json encoded bodies
 router.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies*/
 var User = require("../model/user");
+var Corso = require("../model/post");
 
 
 router.get("/", function(req,res){res.send("test");});
@@ -132,5 +133,26 @@ router.get("/successfullyRegistered", function(req,res){
     
     return;
 }*/
+
+router.post("/cerca", function(req,res,next){
+	var subject = req.body.subject;
+	var location = req.body.location;
+	
+	Corso.find(subject, location, function (error, user) {
+        if (error || !corso) {
+            //non ci sono post con questa materia nella zona selezionata
+			//visualizza i più vicini in altre zone, con la stessa materia (?)
+        } 
+		else if (error || !zona) {
+            //non ci sono post con questa materia nella zona selezionata
+			//visualizza gli annunci nella stessa zona (e range), con altre materie (?)
+        } 
+        else {
+			//da inserire parametro per stampare "ricerca senza risultati"
+            return res.redirect('../views/cerco');
+        }
+    });
+});
+
 module.exports = router;
 console.log("server avviato");
