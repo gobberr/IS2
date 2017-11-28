@@ -130,7 +130,7 @@ router.post("/addPost", function(req,res,next){
                     return next(error);
                 }
                 else {
-                    console.log("post creato");
+                    console.log("post creato!");
                     return res.redirect('/addPost');
                 }
             });

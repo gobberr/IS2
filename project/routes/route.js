@@ -26,7 +26,7 @@ router.post("/cerco", function(req,res){
 	Corso.findPosts(subject, function (error, post) {
         if (error || post.length===0) {
             //non ci sono post con questa materia
-			//DA AGGIUNGERE "nessun risultato per la ricerca"
+            //DA AGGIUNGERE "nessun risultato per la ricerca"
 			console.log("ciao");
 			res.write(pug.renderFile("views/cerco.pug"));
         } else {

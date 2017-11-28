@@ -14,18 +14,28 @@ include includes/jumbotron-light.pug
   .container
     .row
       .col-md-12
-        form(method='post', action='https://formspree.io/')
+        form(action='/test/addPost', method="POST")
           .form-group
-            label Che corso offri?
-            |                             
-            input.form-control(type='text', name='corso', placeholder='Es: Analisi Matematica 1')
-          |                         
+            label Titolo Annuncio
+            |                                     
+            input.form-control(type='text', placeholder='Inserisci il titolo', name="text" required)
+          |                                 
           .form-group
-            label In che zona?
-            |                             
-            input.form-control(type='text', name='zona', placeholder='Es: Trento, 30110')
-          |                         
-          a.btn.btn-lg.btn-outline-primary(href='#') Proponiti
+            label Per che corso?
+            |                                     
+            input.form-control(type='text', placeholder='Inserisci la materia', name="subject" required)
+          |                                 
+          .form-group
+            label Email
+            |                                     
+            input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it', name="email" required)
+          |                                 
+          .form-group
+            label Dove?
+            |                                     
+            input.form-control(type='text', placeholder='Inserisci dove sei disponibile (non obbligatorio)', name="location")
+          |                                                               
+          button.btn.btn-secondary(type='submit') Offri
           
 |     
 .py-5
