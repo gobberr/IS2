@@ -1,4 +1,5 @@
 doctype html
+
 head
   meta(charset='utf-8')
   |     
@@ -7,22 +8,10 @@ head
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', type='text/css')
   |     
   link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
-.py-5.col-md-11
-  .container
-    .row
-      .col-md-12
-        .py-5.text-center.opaque-overlay.bg-primary(style='background-image: url("");')
-          .container.py-5
-            .row
-              .col-md-12.text-white
-                h1.display-3.mb-4 Ripetizioni UniTN&nbsp;
-          |                         
-          .container
-            .row
-              .col-md-12
-                p.text-white
-                  | Ripetizioni UniTN &egrave; un sito dove puoi offrirti per dare ripetizioni per una certa materia e trovare altri studenti disposti ad offrire ripetizioni
-    |             
+include includes/navbar.pug
+include includes/jumbotron-light.pug
+.py-5
+  .container      
     .row
       .col-md-12
         .card.text-white.p-5.bg-primary.text-left
@@ -33,26 +22,33 @@ head
               .form-group
                 label Nome
                 |                                     
-                input.form-control(type='text', placeholder='Inserisci il tuo nome', name="nome")
+                input.form-control(type='text', placeholder='Inserisci il tuo nome', name="nome" required)
               |                                 
               .form-group
                 label Cognome
                 |                                     
-                input.form-control(type='text', placeholder='Inserisci il tuo cognome', name="cognome")
+                input.form-control(type='text', placeholder='Inserisci il tuo cognome', name="cognome" required)
               |                                 
               .form-group
                 label Email universitaria
                 |                                     
-                input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it', name="email")
+                input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it', name="email" required)
               |                                 
               .form-group
                 label Password
                 |                                     
-                input.form-control(type='password', placeholder='Password', name="password")
+                input.form-control(type='password', placeholder='Inserisci la password', name="password" required)
+              |
+              .form-group
+                label Conferma Password
+                |                                     
+                input.form-control(type='password', placeholder='Conferma la password inserita', name="confpassword" required)
               |                                 
               button.btn.btn-secondary(type='submit') Registrati
         |                     
         .col-md-12  
+
+include includes/footer.pug 
 |     
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 |     
