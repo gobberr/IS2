@@ -138,14 +138,10 @@ router.post("/cerca", function(req,res,next){
 	var subject = req.body.subject;
 	var location = req.body.location;
 	
-	Corso.find(subject, location, function (error, user) {
-        if (error || !corso) {
+	Corso.find(subject, longitude, latitude, function (error, user) {
+        if (error || !subject) {
             //non ci sono post con questa materia nella zona selezionata
 			//visualizza i più vicini in altre zone, con la stessa materia (?)
-        } 
-		else if (error || !zona) {
-            //non ci sono post con questa materia nella zona selezionata
-			//visualizza gli annunci nella stessa zona (e range), con altre materie (?)
         } 
         else {
 			//da inserire parametro per stampare "ricerca senza risultati"
