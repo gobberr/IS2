@@ -15,16 +15,17 @@ include includes/jumbotron-light.pug
   .container
     .row
       .col-md-12
-        -var error=true
+        //-var error=true
         if error
-          div.alert.alert-danger Le credenziali inserite non sono corrette! 
+          div.alert.alert-danger Le credenziali inserite non sono corrette!
+        |
         .card.text-white.bg-primary.p-1.text-left
           .card-body.rounded-bottom
             h1.mb-4 Accesso al servizio
             |                             
             form(action='/test/login', method="POST")
               .form-group
-                label Email
+                label Email #{error}
                 |                                     
                 .row.mb-2
                   .col-9

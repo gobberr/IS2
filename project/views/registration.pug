@@ -22,22 +22,27 @@ include includes/jumbotron-light.pug
               .form-group
                 label Nome
                 |                                     
-                input.form-control(type='text', placeholder='Inserisci il tuo nome', name="nome")
+                input.form-control(type='text', placeholder='Inserisci il tuo nome', name="nome" required)
               |                                 
               .form-group
                 label Cognome
                 |                                     
-                input.form-control(type='text', placeholder='Inserisci il tuo cognome', name="cognome")
+                input.form-control(type='text', placeholder='Inserisci il tuo cognome', name="cognome" required)
               |                                 
               .form-group
                 label Email universitaria
                 |                                     
-                input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it', name="email")
+                input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it', name="email" required)
               |                                 
               .form-group
                 label Password
                 |                                     
-                input.form-control(type='password', placeholder='Password', name="password")
+                input.form-control(type='password', placeholder='Inserisci la password', name="password" required)
+              |
+              .form-group
+                label Conferma Password
+                |                                     
+                input.form-control(type='password', placeholder='Conferma la password inserita', name="confpassword" required)
               |                                 
               button.btn.btn-secondary(type='submit') Registrati
         |                     
