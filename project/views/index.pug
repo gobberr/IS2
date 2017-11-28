@@ -3,8 +3,9 @@ doctype html
 head
   style.
     #map {
-        height: 1000px;
-        width: 1000px;
+        height: 200px;
+        width: 100%;
+        margin: 0 auto;
     }
     
   meta(charset='utf-8')
@@ -45,10 +46,12 @@ include includes/navbar.pug
             | Se sei uno studente che offre ripetizioni recati nell&apos;area &quot;Offro ripetizioni&quot; ed inserisci per quale/i materia/e
 |   
 
+hr
+
+#map
 
 include includes/footer.pug
 
-#map
 
 script.
   var map, infoWindow;
@@ -58,7 +61,7 @@ script.
         lat: 46.066667,
         lng: 11.133333
     },
-    zoom: 6
+    zoom: 10
   });
   
   infoWindow = new google.maps.InfoWindow;
@@ -69,6 +72,7 @@ script.
             lat: position.coords.latitude,
             lng: position.coords.longitude
         };
+    
     /*
     infoWindow.setPosition(pos);
     infoWindow.setContent('Location found.');
@@ -88,12 +92,12 @@ script.
   }
   
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' : 'Error: Your Browser doesnt support geolocation.');
-  infoWindow.open(map);
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' : 'Error: Your Browser doesnt support geolocation.');
+    infoWindow.open(map);
   }
   
-script(async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBkJO4vSM5B6HlN-LOc1q7jYKG0gEgUecY&callback=initMap')
+script(async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAyPuNc-IQgslbVyEdvq8kCrJvOQSS4Prs&callback=initMap')
 
 
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
