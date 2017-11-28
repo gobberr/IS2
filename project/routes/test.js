@@ -27,7 +27,7 @@ router.post("/registrazione", function(req,res){
     user.email=email;
     user.password = req.body.password;
     user.save(function(err){if(err) throw err; else console.log("utente aggiunto");}); 
-    res.write(pug.renderFile("views/index.pug"));
+    res.redirect("/");
     }
     else
     res.send("Email non valida");

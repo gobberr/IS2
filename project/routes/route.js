@@ -3,7 +3,7 @@ var router = express.Router();
 const pug = require('pug');
 var test = require("./test");
 
-router.get("/", function(req,res,next){res.write(pug.renderFile("views/index.pug"));});
+router.get("/", function(req,res,next){res.write(pug.renderFile("views/index.pug", {logged:true}));});
 
 router.get("/cerco", function(req,res){res.write(pug.renderFile("views/cerco.pug"));});
 
