@@ -14,7 +14,7 @@ router.get("/", function(req,res,next){
 
 //quando carica la prima volta la pagina di ricerca, non ci sono parametri
 router.get("/cerco", function(req,res){
-	res.write(pug.renderFile("views/cerco.pug"));
+	res.write(pug.renderFile("views/cerco.pug", {values: []}));
 });
 
 //quando riceve una richiesta e ricarica la pagina con i risultati
@@ -27,8 +27,8 @@ router.post("/cerco", function(req,res){
         if (error || post.length===0) {
             //non ci sono post con questa materia
             //DA AGGIUNGERE "nessun risultato per la ricerca"
-			console.log("ciao");
-			res.write(pug.renderFile("views/cerco.pug"));
+			console.log("nessun risultato dalla query");
+			res.write(pug.renderFile("views/cerco.pug", {values: []}));
         } else {
 			console.log("query success: subject=" + subject + ", post=" + post);
 			res.write(pug.renderFile("views/cerco.pug", {values: post}));
