@@ -9,6 +9,7 @@ mongoose.connect('mongodb://dbprogetto:progettois2@ds145293.mlab.com:45293/prova
 router.use(bodyParser.json()); // support json encoded bodies
 router.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies*/
 var User = require("../model/user");
+var Corso = require("../model/post");
 
 
 router.get("/", function(req,res){res.send("test");});
@@ -120,6 +121,23 @@ router.get('/profile', function (req, res, next) {
 });
 
 
+router.post("/addPost", function(req,res,next){
+	var postData = {
+            email: req.body.email,
+            subject: req.body.subject,
+            text: req.body.text         
+        }
+	Corso.create(postData, function (error, user) {
+                if (error) {
+                    return next(error);
+                }
+                else {
+                    console.log("post creato!");
+                    return res.redirect('/addPost');
+                }
+            });
+	//res.write(pug.renderFile("views/addPost.pug"));
+});
 
 
 router.get("/successfullyRegistered", function(req,res){
@@ -134,5 +152,23 @@ router.get("/successfullyRegistered", function(req,res){
     
     return;
 }*/
+
+/*router.post("/cerca", function(req,res,next){
+	var subject = req.body.subject;
+	//var location = req.body.location;
+	
+	Corso.find(subject, function (error, post) {
+        if (error || !subject) {
+            //non ci sono post con questa materia nella zona selezionata
+			//visualizza i più vicini in altre zone, con la stessa materia (?)
+        } 
+        else {
+			console.log("query success, " + subject);
+			//da inserire parametro per stampare "ricerca senza risultati"
+            return res.redirect('/cerco');
+        }
+    });
+});*/
+
 module.exports = router;
 console.log("server avviato");

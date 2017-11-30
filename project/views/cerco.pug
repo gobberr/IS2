@@ -21,16 +21,22 @@ include includes/jumbotron-light.pug
   .container
     .row
       .col-md-6
+<<<<<<< HEAD
         form(method='post', action='#')
+=======
+        //rimanda alla stessa pagina ma con i parametri della form
+        //DA AGGIUNGERE FILTRI
+        form(method='POST', action='/cerco')
+>>>>>>> cerca
           .form-group
             label Che corso cerchi?
             |                             
-            input.form-control(type='text', name='corso', placeholder='Es: Analisi Matematica 1')
+            input.form-control(type='text', name='subject', placeholder='Es: Analisi Matematica 1')
           |                         
           .form-group
             label In che zona?
             |                             
-            input.form-control(type='text', name='zona', placeholder='Es: Trento, 38121')
+            input.form-control(type='text', name='location', placeholder='Es: Trento, 38121')
           |                         
           fieldset.form-group            
             label.form-control-label Raggio di ricerca
@@ -60,8 +66,21 @@ include includes/jumbotron-light.pug
     .row
       .col-md-12
         .row
-          .col-md-6
+          .col-md-8
             h1 Risultati trovati:
+            each val in values
+              .py-5
+                .container
+                  .row
+                    .col-md-12
+                      .card
+                        .card-header 
+                          h4 #{val.subject}
+                        |                     
+                        .card-body
+                          h6 Utente: #{val.email}
+                          |                         
+                          p.p-y-1 #{val.text}
           |                         
           .col-md-6
             .btn-group
@@ -76,10 +95,6 @@ include includes/jumbotron-light.pug
     |             
     .row
       .col-md-12
-        - var values = [];
-          ul
-            each val in values.length ? values : ['Nessun annuncio disponibile']
-              li= val
 
 |     
 
