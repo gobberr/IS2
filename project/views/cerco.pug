@@ -62,11 +62,21 @@ include includes/jumbotron-light.pug
     .row
       .col-md-12
         .row
-          .col-md-6
+          .col-md-8
             h1 Risultati trovati:
             each val in values
-              h1 email: #{val.email}
-              h1 materia: #{val.subject}
+              .py-5
+                .container
+                  .row
+                    .col-md-12
+                      .card
+                        .card-header 
+                          h4 #{val.subject}
+                        |                     
+                        .card-body
+                          h6 Utente: #{val.email}
+                          |                         
+                          p.p-y-1 #{val.text}
           |                         
           .col-md-6
             .btn-group
