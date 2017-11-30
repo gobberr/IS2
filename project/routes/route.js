@@ -13,7 +13,7 @@ router.get("/", function(req,res,next){
 
 router.get("/cerco", function(req,res){res.write(pug.renderFile("views/cerco.pug"));});
 
-router.get("/login", function(req,res){res.write(pug.renderFile("views/login.pug", {error: req.query.error}));});
+router.get("/login", function(req,res){res.write(pug.renderFile("views/login.pug", {error: req.query.error}));res.end();});
 
 router.get("/registrati", function(req,res){res.write(pug.renderFile("views/registration.pug"));});
 

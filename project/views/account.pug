@@ -26,17 +26,20 @@ head
               .form-group
                 label Modifica numero di telefono
                 |                                     
-                - var numero_telefono;
-                input.form-control(type='text', name='new_telephone', placeholder='Nuovo numero')
+                input.form-control(type='text', name='new_telephone', placeholder='Nuovo numero', value=numero_telefono)
+                |
+                input.form-control(type="hidden", value="form-1", name="formid")
                 |                                     
                 button.btn.btn-primary.my-1(type='submit') Salva
             |                             
             form(method='post', action='#')
               .form-group
-                - var email;
+                //- var email;
                 label Modifica email
                 |                                                     
-                input.form-control.my-1(type='email', name='new_email', placeholder='Inserisci la tua nuova mail')
+                input.form-control.my-1(type='email', name='new_email', placeholder='Inserisci la tua nuova mail', value=email)
+                |
+                input.form-control(type="hidden", value="form-2", name="formid")
                 |                                     
                 button.btn.btn-primary.my-1(type='submit') Salva
             |                             
@@ -50,16 +53,19 @@ head
                 input.form-control.my-1(type='password', placeholder='Inserisci la tua nuova password', name='new_password1')
                 |                                     
                 input.form-control.my-1(type='password', placeholder='Reinserisci la tua nuova password', name='new_password2')
+                |
+                input.form-control(type="hidden", value="form-3", name="formid")
                 |                                     
                 button.btn.btn-primary.my-1(type='submit') Salva
       |                 
       .col-md-6
         form(method='post', action='#')
           .form-group
-            - var descrizione_profilo;
             label Modifica la descrizione del tuo profilo
             |  
-            textarea(rows='4', cols='50', placeholder='Massimo 300 caratteri')  
+            textarea(rows='4', cols='50')=descrizione 
+          |
+          input.form-control(type="hidden", value="form-4", name="formid")
           |                         
           button.btn.btn-primary(type='submit') Aggiorna
   |         
@@ -71,7 +77,9 @@ head
             .form-group              
               label Aggiungi competenza
               |                                 
-              input.form-control(type='text', name='new_telephone', placeholder='Inserisci un nuovo corso')
+              input.form-control(type='text', name='competenza', placeholder='Inserisci un nuovo corso')
+            |
+            input.form-control(type="hidden", value="form-5", name="formid")
             |                             
             button.btn.btn-primary(type='submit') Aggiungi
           |                         
@@ -81,13 +89,21 @@ head
         .col-md-6
           form(method='post', action='#')
             .form-group
-              label Rimuovi competenza
-              |                                 
-              - var competenze = [];
-                ul
-                each val in competenze.length ? values : ['Nessuna competenza']
-                  li= val
-            |                             
+              label Rimuovi competenza 
+              - var i=true;
+              each val in skills.length ? skills:["Nessuna competenza"]
+                .form-check
+                  label.form-check-label
+                    if i
+                      input.form-check-input(type="radio", name="delskill", value=val, checked)
+                      |    #{val}
+                      - i=false
+                    else
+                      input.form-check-input(type="radio", name="delskill", value=val)
+                      |    #{val}
+            |
+            input.form-control(type="hidden", value="form-6", name="formid")
+            |
             button.btn.btn-primary(type='submit') Rimuovi
   |         
   script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
