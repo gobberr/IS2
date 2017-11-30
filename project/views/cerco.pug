@@ -21,13 +21,13 @@ include includes/jumbotron-light.pug
   .container
     .row
       .col-md-6
-<<<<<<< HEAD
+
         form(method='post', action='#')
-=======
+
         //rimanda alla stessa pagina ma con i parametri della form
         //DA AGGIUNGERE FILTRI
         form(method='POST', action='/cerco')
->>>>>>> cerca
+
           .form-group
             label Che corso cerchi?
             |                             
@@ -48,12 +48,12 @@ include includes/jumbotron-light.pug
             |                             
             .radio
               label.form-control-label
-                input(type='radio', value='option2', checked='', name='a')
+                input(type='radio', value='option2', checked='', name='b')
                 | &nbsp; &nbsp; Fino a 10km
             |                             
             .radio
               label.form-control-label
-                input(type='radio', value='option2', checked='', name='a')
+                input(type='radio', value='option2', checked='', name='c')
                 | &nbsp; &nbsp; Tutta la citt&agrave;
           |                         
           button.btn.btn-primary(type='submit') Cerca
@@ -74,13 +74,21 @@ include includes/jumbotron-light.pug
                   .row
                     .col-md-12
                       .card
-                        .card-header 
-                          h4 #{val.subject}
-                        |                     
-                        .card-body
-                          h6 Utente: #{val.email}
-                          |                         
-                          p.p-y-1 #{val.text}
+                        form(method='post', action='/annuncio')
+                          .form-group
+                            .card-header 
+                              input.form-control(type='hidden' value='#{val.email}' name='utente')
+                              |
+                              button.btn.btn-primary(type='submit') Annuncio n_#{val._id}
+                            |                     
+                            .card-body
+                              h4 #{val.subject}
+                              |
+                              h6 Utente: #{val.email}
+                              //script.
+                                document.getElementById('details').setAttribute('href', '/annuncio?utente=' + val.email)
+                              |                         
+                              p.p-y-1 #{val.text}
           |                         
           .col-md-6
             .btn-group

@@ -20,7 +20,7 @@ var postSchema = new Schema({
 //funzione che trova un annuncio data la MATERIA
 postSchema.statics.findPosts = function (subject, callback) {
 	
-	geocoder.geocode(location, function ( err, data ) {
+	/*geocoder.geocode(location, function ( err, data ) {
   			if (err) {
 				console.log(err);
 			} else {
@@ -28,13 +28,13 @@ postSchema.statics.findPosts = function (subject, callback) {
 				var latit = toString(data[0].geometry.location.lat());
 				console.log(long + ", " + latit);
 			}
-	});
+	})*/;
 	
-	Post.find({subject: subject,
+	Post.find({subject: subject/*,
 			  location : {
 				  longitude : long,
 				  latitude : latit
-			  }}).exec(function (err, post) {
+			  }*/}).exec(function (err, post) {
       if (err) {
 		//console.log("debug1");
         return callback(err)
