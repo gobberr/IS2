@@ -98,7 +98,7 @@ router.post("/annuncio", function(req,res){
                     //console.log("\nnessun risultato dalla query");
                     //recensioni.push("nessun risultato dalla query");
                     recensioni=[];
-                    res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : utente, logged: logged}));
+                    res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : user, logged: logged}));
                     //res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni}));
                 } else {
                     //console.log("\nquery success: email=" + user + ", utente=" + em);
