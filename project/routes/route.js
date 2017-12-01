@@ -28,10 +28,10 @@ router.post("/cerco", function(req,res){
         if (error || post.length===0) {
             //non ci sono post con questa materia
             //DA AGGIUNGERE "nessun risultato per la ricerca"
-			console.log("nessun risultato dalla query");
+			console.log("nessun risultato dalla query post");
 			res.write(pug.renderFile("views/cerco.pug", {values: []}));
         } else {
-			console.log("query success: subject=" + subject + ", post=" + post);
+			//console.log("query success: subject=" + subject + ", post=" + post);
 			res.write(pug.renderFile("views/cerco.pug", {values: post}));
         }
 		//DA AGGIUNGERE se ci sono post con la materia ma non nella zona, visualizza i più vicini
@@ -44,20 +44,33 @@ router.get("/registrati", function(req,res){res.write(pug.renderFile("views/regi
 
 router.get("/offro", function(req,res){res.write(pug.renderFile("views/offro.pug"));});
 
-router.get("/annuncio", function(req,res){res.write(pug.renderFile("views/annuncio.pug"));});
+router.post("/ritorna", function(req,res){
+	var subject = req.body.subject;
+	
+	Corso.findPosts(subject, function (error, post) {
+        if (error || post.length===0) {
+			res.write(pug.renderFile("views/cerco.pug", {values: []}));
+        } else {
+			res.write(pug.renderFile("views/cerco.pug", {values: post}));
+        }
+    });
+});
+
+router.get("/annuncio", function(req,res){res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User}));});
 
 router.post("/annuncio", function(req,res){
 	var user = req.body.utente;
+	var anntxt = req.body.anntxt;
+	var ritorna = req.body.ritorna;
 	//console.log("UTENTE PASSATO ALLA QUERY: " + user + "\n\n");
 	var recensioni = [];
 	
 	//setTimeout( function() {
 		Review.findReviewOf(user, function(error, rs) {
 			if (error || rs.length===0) {
-				//console.log("\nnessun risultato dalla query");
+				console.log("\nnessun risultato dalla query recensioni");
 				//recensioni.push("nessun risultato dalla query");
-				recensioni=[];
-				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : utente}));
+				res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User, anntxt : anntxt, ritorna : ritorna}));
 				//res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni}));
 			} else {
 				//console.log("\nquery success: email=" + user + ", utente=" + em);
@@ -70,17 +83,16 @@ router.post("/annuncio", function(req,res){
 				//console.log("\n++++++++++++++\n");
 				User.findByEmail(user, function(error, em) {
 					if (error || !em) {
-						//console.log("\nnessun risultato dalla query");
+						console.log("\nnessun risultato dalla query utenti");
 						//res.write(pug.renderFile("views/annuncio.pug", {utente: "utente sconosciuto"}));
 						//var utente = "utente sconosciuto";
 						//console.log("UTENTE NON TROVATO\n\n");
-						var us = null;
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : us}));
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna}));
 					} else {
-						console.log("\nquery success: user=" + em);
+						//console.log("\nquery success: user=" + em);
 						//var utente = em;
 						//console.log("UTENTE TROVATO:" + em + "\n\n");
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em}));
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna}));
 						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
 					}
 				});
