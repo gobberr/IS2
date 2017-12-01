@@ -17,10 +17,10 @@ reviewSchema.statics.findReviewOf = function (email, callback) {
 	
 	Review.find({revised : email}).exec(function (err, rev) {
       if (err) {
-		console.log("\nerrore");
+		//console.log("\nerrore");
 		return callback(err);
       } else if (!rev) {
-		console.log("\nnon trovato, " + rev);
+		console.log("\nnon trovata, " + rev);
 		return callback(null);
       } else {
 		//console.log("\nrev: " + rev);

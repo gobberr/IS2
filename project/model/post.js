@@ -39,7 +39,7 @@ postSchema.statics.findPosts = function (subject, callback) {
 		//console.log("debug1");
         return callback(err)
       } else if (!post) {
-		//console.log("debug2 " + post);
+		console.log("\nnon trovato, " + post);
         return callback(null);
       }
 		else {

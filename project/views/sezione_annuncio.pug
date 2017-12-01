@@ -7,48 +7,43 @@ head
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', type='text/css')
   |     
   link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
-.py-5
+.py-3
   .container
     .row
       .col-md-12
         .row
           .col-md-6
-            - var nome;
-            - var cognome;
-            - var voto;
-            - var latitudine;
-            - var longitudine;
-            p.lead #{utente.name} #{utente.surname}
+            p.lead.h3 #{utente.name} #{utente.surname}
             |  
             img.img-fluid.d-block.mb-3.rounded.w-75(src='../../30818238-Avatar-Profilo-maschile-uso-picture-per-il-sito-web-sociale-Vector--Archivio-Fotografico.jpg')
-            |                         
-            p.lead Media voto recensioni utente
             |
-            p Informazioni per contatto utente:
+            p.h4 Informazioni utente:
             |
-            p skills: #{utente.skills}
+            br
             |
-            p telefono: ${utente.telephone}
-            label
+            p.h5 Email contatto:
+            |
+            p.h6 #{utente.email}
+            |
+            br
+            |
+            p.h5 Competenze
+              each val in utente.skills
+                h6 @ #{val}
           |                     
           .col-md-6
-            form(method='post', action='https://formspree.io/')
+            form(method='POST', action='/')
               .form-group
-                p.lead Posizione annuncio
-                |  
-                img.d-block.img-fluid(src='https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyDW8nO9JhT_pEjebobq9pgUF2cEp0EUb1I&markers=Piazza+fiera&center=Trento%2C+italia&zoom=12&size=640x480&sensor=false')
-                |                                 
-                p
+                p.lead Posizione annuncio:
+                |
+                iframe(src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11073.207355997665!2d11.115205435220837!3d46.06502232402544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x16faa4cc65ceea27!2sUniversit%C3%A0+degli+Studi+di+Trento!5e0!3m2!1sit!2sit!4v1512139837631', width='400', height='300', frameborder='0', style='border:0', allowfullscreen='')
                 |                                 
                 .row
                   .col-md-4
                   |                                     
                   .col-md-4
                     a.btn.btn-primary.text-center.mr-auto(href='') Contatta l&apos;utente
-                  |                                     
-                  .col-md-4
-              |                             
-              .form-group  
+
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js', integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4', crossorigin='anonymous')
 script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js', integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1', crossorigin='anonymous')

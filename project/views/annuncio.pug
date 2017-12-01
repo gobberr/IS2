@@ -10,28 +10,31 @@ head
 
 include includes/header.pug
 
-.py-5
+.py-3
   .container
     .row
       .col-md-12
         .row
           .col-md-6
-            h1 Dettagli utente e annuncio
-          |                         
+            h1 Dettagli Annuncio:
+            h2 " #{anntxt} "
+          | 
           .col-md-6
-            a.btn.btn-primary(href='') Ritorna agli annunci
+            form(method='POST', action='/ritorna')
+              .form-group
+                input.form-control(type='hidden' value=ritorna name='subject')
+                |
+                button.btn.btn-primary(type='submit') Ritorna agli annunci
 
           include sezione_annuncio.pug
 |     
-.py-5
+.py-3
   .container
     .row
       .col-md-6
-        h1 Recensioni utente
-        each rec in recensioni
-          h4 #{rec.reviewer} ha votato #{rec.vote}
-        |
-        h2 Media voti: 
+        h3 Recensioni sull'utente
+        
+        include sezione_recensione.pug
       |                 
       .col-md-6
         a.btn.btn-primary(href='/addreview') Aggiungi recensione
