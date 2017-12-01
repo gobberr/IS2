@@ -11,7 +11,10 @@ nav.navbar.navbar-expand-md.bg-secondary.navbar-dark
           a.nav-link.active.mr-2(href='/cerco') Cerco ripetizioni
         |                     
         li.nav-item
-          a.nav-link.active.mr-2(href='/offro') Offro ripetizioni
+          if logged
+            a.nav-link.active.mr-2(href='/offro') Offro ripetizioni
+          else
+            a.nav-link.active.mr-2(href='/login') Offro ripetizioni
         |                     
         li.nav-item
           a.nav-link.active(href='/chiSiamo') Chi siamo

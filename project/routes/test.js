@@ -13,7 +13,7 @@ var User = require("../model/user");
 var Corso = require("../model/post");
 
 
-router.get("/", function(req,res){res.send("test");});
+//router.get("/", function(req,res){res.send("test");});
 
 router.post("/registrazione", function(req,res,next){
     /*var user = new User();
@@ -123,21 +123,22 @@ router.get('/profile', function (req, res, next) {
 
 
 router.post("/addPost", function(req,res,next){
+
 	var postData = {
-            email: req.body.email,
-            subject: req.body.subject,
-            text: req.body.text         
-        }
+        email: req.body.email,
+        subject: req.body.subject,
+        text: req.body.text         
+    }
 	Corso.create(postData, function (error, user) {
-                if (error) {
-                    return next(error);
-                }
-                else {
-                    console.log("post creato!");
-                    return res.redirect('/addPost');
-                }
-            });
-	//res.write(pug.renderFile("views/addPost.pug"));
+        if (error) {
+            return next(error);
+        }
+        else {
+            console.log("post creato!");
+            return res.redirect('/addPost');
+        }
+    });
+    
 });
 
 
