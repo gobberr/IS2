@@ -4,6 +4,7 @@ const pug = require('pug');
 var test = require("./test");
 var User = require("../model/user");
 var Corso = require("../model/post");
+var Review = require("../model/review");
 
 router.get("/", function(req,res,next){
     isLoggedIn(req,res, function(logged) {
@@ -44,6 +45,49 @@ router.get("/registrati", function(req,res){res.write(pug.renderFile("views/regi
 router.get("/offro", function(req,res){res.write(pug.renderFile("views/offro.pug"));});
 
 router.get("/annuncio", function(req,res){res.write(pug.renderFile("views/annuncio.pug"));});
+
+router.post("/annuncio", function(req,res){
+	var user = req.body.utente;
+	//console.log("UTENTE PASSATO ALLA QUERY: " + user + "\n\n");
+	var recensioni = [];
+	
+	//setTimeout( function() {
+		Review.findReviewOf(user, function(error, rs) {
+			if (error || rs.length===0) {
+				//console.log("\nnessun risultato dalla query");
+				//recensioni.push("nessun risultato dalla query");
+				recensioni=[];
+				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : utente}));
+				//res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni}));
+			} else {
+				//console.log("\nquery success: email=" + user + ", utente=" + em);
+				//console.log("\n++++++++++++++\n");
+				for (var i=0; i<rs.length; i++) {
+					recensioni.push(rs[i]);
+					//console.log("elemento: " + recensioni[i] + ", aggiunto\n");	
+				}
+				
+				//console.log("\n++++++++++++++\n");
+				User.findByEmail(user, function(error, em) {
+					if (error || !em) {
+						//console.log("\nnessun risultato dalla query");
+						//res.write(pug.renderFile("views/annuncio.pug", {utente: "utente sconosciuto"}));
+						//var utente = "utente sconosciuto";
+						//console.log("UTENTE NON TROVATO\n\n");
+						var us = null;
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : us}));
+					} else {
+						console.log("\nquery success: user=" + em);
+						//var utente = em;
+						//console.log("UTENTE TROVATO:" + em + "\n\n");
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em}));
+						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
+					}
+				});
+			}
+		});
+	//}, 3000);
+});
 
 router.get("/addPost", function(req,res){res.write(pug.renderFile("views/addPost.pug"));});
 

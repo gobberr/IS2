@@ -74,19 +74,20 @@ include includes/jumbotron-light.pug
                   .row
                     .col-md-12
                       .card
-                        form(method='post', action='/annuncio')
+                        form(method='POST', action='/annuncio')
                           .form-group
                             .card-header 
-                              input.form-control(type='hidden' value='#{val.email}' name='utente')
+                              input.form-control(type='hidden' value=val.email name='utente')
                               |
                               button.btn.btn-primary(type='submit') Annuncio n_#{val._id}
+                              
                             |                     
                             .card-body
                               h4 #{val.subject}
                               |
                               h6 Utente: #{val.email}
                               //script.
-                                document.getElementById('details').setAttribute('href', '/annuncio?utente=' + val.email)
+                                document.getElementById('details').setAttribute('href', '/annuncio?utente=' + #{val.email})
                               |                         
                               p.p-y-1 #{val.text}
           |                         

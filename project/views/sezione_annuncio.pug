@@ -18,19 +18,23 @@ head
             - var voto;
             - var latitudine;
             - var longitudine;
-            p.lead Nome e cognome utente che ha messo l&apos;annuncio
+            p.lead #{utente.name} #{utente.surname}
             |  
             img.img-fluid.d-block.mb-3.rounded.w-75(src='../../30818238-Avatar-Profilo-maschile-uso-picture-per-il-sito-web-sociale-Vector--Archivio-Fotografico.jpg')
             |                         
             p.lead Media voto recensioni utente
-            |                         
-            p descrizione dell&apos;utente&nbsp;
+            |
+            p Informazioni per contatto utente:
+            |
+            p skills: #{utente.skills}
+            |
+            p telefono: ${utente.telephone}
             label
           |                     
           .col-md-6
             form(method='post', action='https://formspree.io/')
               .form-group
-                p.lead Posizione utente
+                p.lead Posizione annuncio
                 |  
                 img.d-block.img-fluid(src='https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyDW8nO9JhT_pEjebobq9pgUF2cEp0EUb1I&markers=Piazza+fiera&center=Trento%2C+italia&zoom=12&size=640x480&sensor=false')
                 |                                 
