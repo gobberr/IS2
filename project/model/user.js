@@ -50,9 +50,23 @@ userSchema.pre('save', function (next) {
   })
 });
 
-// the schema is useless so far
-// we need to create a model using it
+//funzione per trovare un utente corrispondente ai parametri passati
+userSchema.statics.findByEmail = function (email, callback) {
+	User.findOne({ email : email }).exec(function (err, user) {
+      if (err) {
+		console.log("\nerrore");
+        return callback(err);
+      } else if (!user) {
+		console.log("\nnon trovato, " + user);
+        return callback(null);
+	  } else {
+	  	console.log("\nuser: " + user);
+		//console.log("\n\n" + user.email + "\n");
+		return callback(null, user);
+	  }
+	});
+}
+
 var User = mongoose.model('User', userSchema);
 
-// make this available to our users in our Node applications
 module.exports = User;

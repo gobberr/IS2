@@ -9,13 +9,26 @@ var reviewSchema = new Schema({
   text: String,
 });
 
-// the schema is useless so far
-// we need to create a model using it
-var Review = mongoose.model('Review', reviewSchema);
+//tutte le recensioni fatte da un utente
+//reviewSchema.statics.findReviewBy = function (subject, callback) {
 
-// non assicuro il funzionamento delle seguenti funzioni per ricavare il voto
-// medio di un utente
-
+//tutte le recensioni su un utente
+reviewSchema.statics.findReviewOf = function (email, callback) {
+	
+	Review.find({revised : email}).exec(function (err, rev) {
+      if (err) {
+		console.log("\nerrore");
+		return callback(err);
+      } else if (!rev) {
+		console.log("\nnon trovato, " + rev);
+		return callback(null);
+      } else {
+		//console.log("\nrev: " + rev);
+		return callback(null, rev);
+	  }
+	});
+}
+/*
 // recupera la lista dei voti da un utente
 var get_votes = function(email){
   Review.find({ revised: email }, 'vote', function(err, review) {
@@ -39,8 +52,9 @@ get_votes.forEach(function(element) {
 var avg=function(email){
   if(count(email)==0) return 0;
   return sum/count(email);
-}
+}*/
 
 // make this available to our users in our Node applications
+var Review = mongoose.model('Review', reviewSchema);
 module.exports = Review;
-module.exports = avg;
+//module.exports = avg;

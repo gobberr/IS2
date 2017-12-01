@@ -28,12 +28,16 @@ include includes/header.pug
     .row
       .col-md-6
         h1 Recensioni utente
+        each rec in recensioni
+          h4 #{rec.reviewer} ha votato #{rec.vote}
+        |
+        h2 Media voti: 
       |                 
       .col-md-6
-        a.btn.btn-primary(href='') Aggiungi recensione
+        a.btn.btn-primary(href='/addreview') Aggiungi recensione
 
 
-        include sezione_recensione.pug
+        //include sezione_recensione.pug
 |     
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 |     
