@@ -70,7 +70,7 @@ router.post("/annuncio", function(req,res){
 			if (error || rs.length===0) {
 				console.log("\nnessun risultato dalla query recensioni");
 				//recensioni.push("nessun risultato dalla query");
-				res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User, anntxt : anntxt, ritorna : ritorna}));
+				res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0}));
 				//res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni}));
 			} else {
 				//console.log("\nquery success: email=" + user + ", utente=" + em);
@@ -87,12 +87,28 @@ router.post("/annuncio", function(req,res){
 						//res.write(pug.renderFile("views/annuncio.pug", {utente: "utente sconosciuto"}));
 						//var utente = "utente sconosciuto";
 						//console.log("UTENTE NON TROVATO\n\n");
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna}));
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0}));
 					} else {
 						//console.log("\nquery success: user=" + em);
 						//var utente = em;
 						//console.log("UTENTE TROVATO:" + em + "\n\n");
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna}));
+						
+						Review.avg(user, function(error, media) {
+							if (error) {
+								console.log(error);
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0}));
+							} else {
+								var sum = 0;
+								var count = media.length;
+								for(var i=0; i<media.length; i++) {
+									sum += media[i].vote;
+								}
+								
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : sum/count, numero : media.length}));
+							}
+						})
+						
+						
 						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
 					}
 				});

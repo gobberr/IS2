@@ -14,7 +14,6 @@ var reviewSchema = new Schema({
 
 //tutte le recensioni su un utente
 reviewSchema.statics.findReviewOf = function (email, callback) {
-	
 	Review.find({revised : email}).exec(function (err, rev) {
       if (err) {
 		//console.log("\nerrore");
@@ -28,33 +27,40 @@ reviewSchema.statics.findReviewOf = function (email, callback) {
 	  }
 	});
 }
-/*
-// recupera la lista dei voti da un utente
-var get_votes = function(email){
-  Review.find({ revised: email }, 'vote', function(err, review) {
-    if (err) throw err;
-    // object of the user
-    console.log(user);
-  });
+
+//funzioni ausiliarie per la media, da rendere più efficiente (?)
+/*var get_votes = function(email){
+	
+	Review.find({ revised : email }, 'vote', function(err, review) {
+		if (err || !review) throw err;
+		console.log("\nUTENTE DEI VOTI: " + user);
+	});
+	
 };
 
-// conta il numero di voti
-var count=get_votes(email).length;
+var count = get_votes.length;
 
-// somma i voti
-var sum=0;
+var sum = 0;
 get_votes.forEach(function(element) {
   sum+=parseInt(element);
-  console.log(element);
+  console.log("\nVOTO TOT: " + element);
 });
+*/
 
-// avg restituisce la somma dei  voti
-var avg=function(email){
-  if(count(email)==0) return 0;
-  return sum/count(email);
-}*/
+reviewSchema.statics.avg = function(email, callback){
+	Review.find({revised : email}, 'vote').exec(function (err, votes) {
+      if (err) {
+		//console.log("\nerrore");
+		return callback(err);
+      } else if (!votes) {
+		console.log("\nnon trovati, " + votes);
+		return callback(null);
+      } else {
+		//console.log("\nvoti: " + votes);
+		return callback(null, votes);
+	  }
+	});
+}
 
-// make this available to our users in our Node applications
 var Review = mongoose.model('Review', reviewSchema);
 module.exports = Review;
-//module.exports = avg;
