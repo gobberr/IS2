@@ -60,6 +60,17 @@ router.get("/offro", function(req,res){
     });
 });
 
+router.post("/ritorna", function(req,res){
+	var subject = req.body.subject;
+	
+	Corso.findPosts(subject, function (error, post) {
+        if (error || post.length===0) {
+			res.write(pug.renderFile("views/cerco.pug", {values: []}));
+        } else {
+			res.write(pug.renderFile("views/cerco.pug", {values: post}));
+        }
+    });
+});
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
         var postData = {
@@ -87,48 +98,66 @@ router.get("/annuncio", function(req,res){
 });
 
 router.post("/annuncio", function(req,res){
-    isLoggedIn(req,res, function(logged) {        
-        var user = req.body.utente;
-        //console.log("UTENTE PASSATO ALLA QUERY: " + user + "\n\n");
-        var recensioni = [];
-        
-        //setTimeout( function() {
-            Review.findReviewOf(user, function(error, rs) {
-                if (error || rs.length===0) {
-                    //console.log("\nnessun risultato dalla query");
-                    //recensioni.push("nessun risultato dalla query");
-                    recensioni=[];
-                    res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : user, logged: logged}));
-                    //res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni}));
-                } else {
-                    //console.log("\nquery success: email=" + user + ", utente=" + em);
-                    //console.log("\n++++++++++++++\n");
-                    for (var i=0; i<rs.length; i++) {
-                        recensioni.push(rs[i]);
-                        //console.log("elemento: " + recensioni[i] + ", aggiunto\n");	
-                    }
-                    
-                    //console.log("\n++++++++++++++\n");
-                    User.findByEmail(user, function(error, em) {
-                        if (error || !em) {
-                            //console.log("\nnessun risultato dalla query");
-                            //res.write(pug.renderFile("views/annuncio.pug", {utente: "utente sconosciuto"}));
-                            //var utente = "utente sconosciuto";
-                            //console.log("UTENTE NON TROVATO\n\n");
-                            var us = null;
-                            res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : us, logged: logged}));
-                        } else {
-                            console.log("\nquery success: user=" + em);
-                            //var utente = em;
-                            //console.log("UTENTE TROVATO:" + em + "\n\n");
-                            res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, logged: logged}));
-                            //res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
-                        }
-                    });
-                }
-            });
-        //}, 3000);
-    });
+      isLoggedIn(req,res,function(logged){
+	var user = req.body.utente;
+	var anntxt = req.body.anntxt;
+	var ritorna = req.body.ritorna;
+	//console.log("UTENTE PASSATO ALLA QUERY: " + user + "\n\n");
+	var recensioni = [];
+	
+	//setTimeout( function() {
+		Review.findReviewOf(user, function(error, rs) {
+			if (error || rs.length===0) {
+				console.log("\nnessun risultato dalla query recensioni");
+				//recensioni.push("nessun risultato dalla query");
+				res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
+				//res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni}));
+			} else {
+				//console.log("\nquery success: email=" + user + ", utente=" + em);
+				//console.log("\n++++++++++++++\n");
+				for (var i=0; i<rs.length; i++) {
+					recensioni.push(rs[i]);
+					//console.log("elemento: " + recensioni[i] + ", aggiunto\n");	
+				}
+				
+				//console.log("\n++++++++++++++\n");
+				User.findByEmail(user, function(error, em) {
+					if (error || !em) {
+						console.log("\nnessun risultato dalla query utenti");
+						//res.write(pug.renderFile("views/annuncio.pug", {utente: "utente sconosciuto"}));
+						//var utente = "utente sconosciuto";
+						//console.log("UTENTE NON TROVATO\n\n");
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
+					} else {
+						//console.log("\nquery success: user=" + em);
+						//var utente = em;
+						//console.log("UTENTE TROVATO:" + em + "\n\n");
+						
+						Review.avg(user, function(error, media) {
+							if (error) {
+								console.log(error);
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
+							} else {
+								var sum = 0;
+								var count = media.length;
+								for(var i=0; i<media.length; i++) {
+									sum += media[i].vote;
+								}
+								
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : sum/count, numero : media.length, logged:logged}));
+							}
+						})
+						
+						
+						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
+						
+					}
+					res.end();
+				});
+			}
+		});
+	//}, 3000);
+      });
 });
 
 router.get("/addPost", function(req,res){

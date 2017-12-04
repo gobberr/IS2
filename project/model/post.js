@@ -9,7 +9,7 @@ var geocoder = require('geocoder');
 var postSchema = new Schema({
   text: { type: String, required: true },
   email: { type: String, required: true }, // per fare riferimento all'utente che ha creato il post
-  subject: { type: String, required: true },
+	subject: { type: String, required: true },
   location: {
     description: String,
     latitude: String,
@@ -39,7 +39,7 @@ postSchema.statics.findPosts = function (subject, callback) {
 		//console.log("debug1");
         return callback(err)
       } else if (!post) {
-		//console.log("debug2 " + post);
+		console.log("\nnon trovato, " + post);
         return callback(null);
       }
 		else {

@@ -54,13 +54,13 @@ userSchema.pre('save', function (next) {
 userSchema.statics.findByEmail = function (email, callback) {
 	User.findOne({ email : email }).exec(function (err, user) {
       if (err) {
-		console.log("\nerrore");
+		//console.log("\nerrore");
         return callback(err);
       } else if (!user) {
 		console.log("\nnon trovato, " + user);
         return callback(null);
 	  } else {
-	  	console.log("\nuser: " + user);
+	  	//console.log("\nuser: " + user);
 		//console.log("\n\n" + user.email + "\n");
 		return callback(null, user);
 	  }
