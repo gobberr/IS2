@@ -56,7 +56,7 @@ router.post("/ritorna", function(req,res){
     });
 });
 
-router.get("/annuncio", function(req,res){res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User}));});
+router.get("/annuncio", function(req,res){res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User})); res.end();});
 
 router.post("/annuncio", function(req,res){
 	var user = req.body.utente;
@@ -110,7 +110,9 @@ router.post("/annuncio", function(req,res){
 						
 						
 						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
+						
 					}
+					res.end();
 				});
 			}
 		});
