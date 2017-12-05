@@ -14,21 +14,13 @@ include includes/jumbotron-light.pug
   .container
     .row
       .col-md-12
-<<<<<<< HEAD
-        form(method='post', action='#')
-          .form-group            
-            label Che corso offri?
-            |                             
-            input.form-control(type='text', name='corso', placeholder='Es: Analisi Matematica 1')
-          |                         
-=======
+
         form(action='/test/addPost', method="POST")
           .form-group
             label Titolo Annuncio
             |                                     
             input.form-control(type='text', placeholder='Inserisci il titolo', name="text" required)
           |                                 
->>>>>>> cerca
           .form-group
             label Per che corso?
             |                                     
