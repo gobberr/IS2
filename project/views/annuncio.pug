@@ -37,7 +37,15 @@ include includes/header.pug
         include sezione_recensione.pug
       |                 
       .col-md-6
-        a.btn.btn-primary(href='/addreview') Aggiungi recensione
+        form(method='POST', action='/addreview')
+          .form-group
+            input.form-control(type='hidden' value=utente.email name='utente')
+            |
+            input.form-control(type='hidden' value=anntxt name='anntxt')
+            |
+            input.form-control(type='hidden' value=ritorna name='ritorna')
+            |
+            button.btn.btn-primary(type='submit') Aggiungi recensione
 |     
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 |     

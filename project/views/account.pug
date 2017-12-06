@@ -68,6 +68,20 @@ head
           input.form-control(type="hidden", value="form-4", name="formid")
           |                         
           button.btn.btn-primary(type='submit') Aggiorna
+        |
+        br
+        br
+        br
+        form(method='post', enctype='multipart/form-data', action='/upload')          
+            .form-group
+              label Aggiorna la tua immagine di profilo
+              |
+              input(type='file', name='file_upload')
+              |
+              input.form-control(type="hidden", value="form-7", name="formid")
+              |     
+              button.btn.btn-primary.my-1(type='submit') Carica
+              |
   |         
   .py-5
     .container

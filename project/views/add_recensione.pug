@@ -10,44 +10,58 @@ head
 .py-5
   .container
     .row
-      .col-md-3  
+      .col-md-3
       |                 
       .col-md-6
         .card.text-white.p-5.bg-primary
           .card-body
             h1.mb-4 Aggiungi recensione
             |                             
-            form(action='#')
+            form(method='POST' action='/recensione')
               .form-group                
                 legend Voto
                 |  1
                 |                                     
-                input(type='radio', name='1', value='1')
+                input(type='radio', name='r', value='1')
                 |  2
                 |                                     
-                input(type='radio', name='2', value='2')
+                input(type='radio', name='r', value='2')
                 |  3
                 |                                     
-                input(type='radio', name='3', value='3')
+                input(type='radio', name='r', value='3')
                 |  4
                 |                                     
-                input(type='radio', name='4', value='4')
+                input(type='radio', name='r', value='4')
                 |  5
                 |                                     
-                input(type='radio', name='5', value='5')
+                input(type='radio', name='r', value='5')
               |                                 
               div
-                textarea.w-100(rows='4', placeholder='Testo della recensione')
+                textarea.w-100(rows='5', placeholder='Testo della recensione', name='text')
+                |
+                input.form-control(type='hidden' value=utente name='utente')
+                |
+                input.form-control(type='hidden' value=anntxt name='anntxt')
+                |
+                input.form-control(type='hidden' value=ritorna name='ritorna')
               |                                 
-              button.btn.btn-secondary.w-100.my-2(type='submit') Recensisci
+              button.btn.btn-primary(type='submit') Recensisci
 |     
 .py-5
   .container
     .row
       .col-md-4
-      |                 
+      | 
       .col-md-4
-        a.btn.btn-primary.w-100(href='') Annulla recensione
+        form(method='POST' action='/annuncio')
+          .form-group
+            input.form-control(type='hidden' value=utente name='utente')
+            |
+            input.form-control(type='hidden' value=anntxt name='anntxt')
+            |
+            input.form-control(type='hidden' value=ritorna name='ritorna')
+            |
+            button.btn.btn-primary(type='submit') Annulla recensione
       |                 
       .col-md-4
 |     
