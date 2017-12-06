@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 //var mapsapi = require( 'google-maps-api' )( 'your api key' );
-var geocoder = require('geocoder');
+//var geocoder = require('geocoder');
 
 // create a schema
 // offerta ripetizioni

@@ -22,8 +22,14 @@ router.get("/cerco", function(req,res){
 
 //quando riceve una richiesta e ricarica la pagina con i risultati
 router.post("/cerco", function(req,res){
-    isLoggedIn(req,res, function(logged) {        
+    isLoggedIn(req,res, function(logged) {  
+        
+        var lat = req.body.latitudine;
+        var lng = req.body.longitudine;
+        
         var subject = req.body.subject;
+        
+        console.log("lat: " + lat + " lng: " + lng);
         //DA AGGIUNGERE geolocalizzazione, trasforma la location indicata nella form in longitudine e latitudine
         //var location = req.body.location;
         
