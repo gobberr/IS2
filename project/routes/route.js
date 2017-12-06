@@ -225,6 +225,20 @@ router.post("/recensione", function(req,res){
     });
 });
 
-
+router.post('/upload', function (req, res) {
+    
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, files) 
+        {
+            var oldpath = files.file_upload.path;
+            var newpath = __dirname + '/../upload/' + files.file_upload.name;
+            fs.rename(oldpath, newpath, function (err) 
+            {
+                if (err) throw err;                
+                res.redirect("/test/account");                        
+            });
+        });
+    
+});
 
 module.exports = router;
