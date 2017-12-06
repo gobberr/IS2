@@ -5,6 +5,9 @@ var test = require("./test");
 var User = require("../model/user");
 var Corso = require("../model/post");
 var Review = require("../model/review");
+var path = require('path'), fs = require('fs');
+var formidable = require('formidable');
+//var bodyparser = require('body-parser');
 
 router.get("/", function(req,res,next){
     isLoggedIn(req,res, function(logged) {
@@ -152,7 +155,7 @@ router.post("/annuncio", function(req,res){
 						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
 						
 					}
-					res.end();
+					//res.end();
 				});
 			}
 		});
@@ -185,4 +188,20 @@ function isLoggedIn(req, res, callback) {
     });
 }
 
+//router.use(bodyparser({uploadDir:'../'}));
+router.post('/upload', function (req, res) {
+    
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, files) 
+        {
+            var oldpath = files.file_upload.path;
+            var newpath = __dirname + '/../upload/' + files.file_upload.name;
+            fs.rename(oldpath, newpath, function (err) 
+            {
+                if (err) throw err;                
+                res.redirect("/test/account");                        
+            });
+        });
+    
+});
 module.exports = router;
