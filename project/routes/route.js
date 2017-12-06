@@ -37,11 +37,13 @@ router.get("/cerco", function(req,res){
 router.post("/cerco", function(req,res){
     isLoggedIn(req,res, function(logged) {  
         
+        // prendo lat e lng da cerco.pug
         var lat = req.body.latitudine;
         var lng = req.body.longitudine;
         
         var subject = req.body.subject;
         
+        // verifico il corretto funzionamento con debug su terminale
         console.log("lat: " + lat + " lng: " + lng);
 
         
@@ -93,9 +95,11 @@ router.post("/ritorna", function(req,res){
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
         
+        // prendo lat e lng da offro.pug
         var lat = req.body.latitudine;
         var lng = req.body.longitudine;
         
+        //debug su terminale per verificare il funzionamento
         console.log("lat: " + lat + " lng: " + lng);
         
         var postData = {
