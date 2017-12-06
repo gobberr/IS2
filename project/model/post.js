@@ -1,15 +1,24 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-//var mapsapi = require( 'google-maps-api' )( 'your api key' );
-var geocoder = require('geocoder');
+/*var GoogleMapsAPI = require('googlemaps');
+
+var publicConfig = {
+  key: 'AIzaSyAyPuNc-IQgslbVyEdvq8kCrJvOQSS4Prs',
+  stagger_time:       1000, // for elevationPath
+  encode_polylines:   false,
+  secure:             true, // use https
+  proxy:              'http://127.0.0.1:4000' // optional, set a proxy for HTTP requests
+};
+
+var gmAPI = new GoogleMapsAPI(publicConfig);*/
 
 // create a schema
 // offerta ripetizioni
 var postSchema = new Schema({
   text: { type: String, required: true },
   email: { type: String, required: true }, // per fare riferimento all'utente che ha creato il post
-	subject: { type: String, required: true },
+  subject: { type: String, required: true },
   location: {
     description: String,
     latitude: String,
@@ -18,7 +27,7 @@ var postSchema = new Schema({
 });
 
 //funzione che trova un annuncio data la MATERIA
-postSchema.statics.findPosts = function (subject, callback) {
+postSchema.statics.findPosts = function (subject, location, callback) {
 	
 	/*geocoder.geocode(location, function ( err, data ) {
   			if (err) {
@@ -28,8 +37,21 @@ postSchema.statics.findPosts = function (subject, callback) {
 				var latit = toString(data[0].geometry.location.lat());
 				console.log(long + ", " + latit);
 			}
-	})*/;
+	});*/
 	
+	/*var geocodeParams = {
+  			"address":    "121, Curtain Road, EC2A 3AD, London UK",
+  			"components": "components=country:GB",
+  			"bounds":     "55,-1|54,1",
+  			"language":   "en",
+  			"region":     "uk"
+	};
+
+	gmAPI.geocode(geocodeParams, function(err, result){
+		if (err) console.log(err);
+  		else console.log("GEOCODING: " + result);
+	});*/
+		
 	Post.find({subject: subject/*,
 			  location : {
 				  longitude : long,
