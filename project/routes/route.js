@@ -13,6 +13,16 @@ router.get("/", function(req,res,next){
     });
 });
 
+router.post("/addreview", function(req,res){
+	var utente = req.body.utente;
+	var anntxt = req.body.anntxt;
+	var ritorna = req.body.ritorna;
+	/*console.log("utente: " + utente);
+	console.log("annuncio: " + anntxt);
+	console.log("subject: " + ritorna + "\n\n");*/
+	res.write(pug.renderFile("views/add_recensione.pug", {utente: utente, ritorna : ritorna, anntxt : anntxt}));
+});
+
 //quando carica la prima volta la pagina di ricerca, non ci sono parametri
 router.get("/cerco", function(req,res){
     isLoggedIn(req,res, function(logged) {       
@@ -24,17 +34,16 @@ router.get("/cerco", function(req,res){
 router.post("/cerco", function(req,res){
     isLoggedIn(req,res, function(logged) {        
         var subject = req.body.subject;
-        //DA AGGIUNGERE geolocalizzazione, trasforma la location indicata nella form in longitudine e latitudine
-        //var location = req.body.location;
+        var location = req.body.location;
         
-        Corso.findPosts(subject, function (error, post) {
+        Corso.findPosts(subject, location, function (error, post) {
             if (error || post.length===0) {
                 //non ci sono post con questa materia
                 //DA AGGIUNGERE "nessun risultato per la ricerca"
                 console.log("nessun risultato dalla query");
                 res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
             } else {
-                console.log("query success: subject=" + subject + ", post=" + post);
+                //console.log("query success: subject=" + subject + ", post=" + post);
                 res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
             }
             //DA AGGIUNGERE se ci sono post con la materia ma non nella zona, visualizza i più vicini
@@ -42,7 +51,7 @@ router.post("/cerco", function(req,res){
     });
 });
 
-router.get("/login", function(req,res){
+router.get("/login", function(req,res) {
     isLoggedIn(req,res, function(logged) {        
         res.write(pug.renderFile("views/login.pug", {error: req.query.error, logged: logged}));res.end();
     });
@@ -102,6 +111,9 @@ router.post("/annuncio", function(req,res){
 	var user = req.body.utente;
 	var anntxt = req.body.anntxt;
 	var ritorna = req.body.ritorna;
+    /*console.log("utente: " + user);
+	console.log("annuncio: " + anntxt);
+	console.log("subject: " + ritorna + "\n\n");*/
 	//console.log("UTENTE PASSATO ALLA QUERY: " + user + "\n\n");
 	var recensioni = [];
 	
@@ -152,7 +164,7 @@ router.post("/annuncio", function(req,res){
 						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
 						
 					}
-					res.end();
+					//res.end();
 				});
 			}
 		});
@@ -184,5 +196,32 @@ function isLoggedIn(req, res, callback) {
         }
     });
 }
+
+router.post("/recensione", function(req,res){
+	var utente = req.body.utente;
+	var anntxt = req.body.anntxt;
+	var ritorna = req.body.ritorna;
+	//console.log("SESSIONE: " + req.session.userId);
+	
+	
+	var reviewData = {
+		reviewer: req.session.emailUser,
+        revised: req.body.utente,
+        vote: req.body.r,
+        text: req.body.text         
+    }
+	
+	Review.create(reviewData, function (error, user) {
+        if (error) {
+            return console.log(error);
+        }
+        else {
+            console.log("recensione creata!");
+			res.redirect("/cerco");
+        }
+    });
+});
+
+
 
 module.exports = router;

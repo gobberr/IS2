@@ -84,6 +84,7 @@ router.post("/login", function(req,res,next){
         } 
         else {
             req.session.userId = user._id;
+			req.session.emailUser = user.email;
             return res.redirect('/');
         }
     });
