@@ -57,19 +57,17 @@ script(type='text/javascript').
         var location = document.forms["form"]["location"].value;
         var geocoder = new google.maps.Geocoder();
         var lat, lng;
-        var error=true;
         geocoder.geocode( {'address': location}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 lat = results[0].geometry.location.lat();
                 lng = results[0].geometry.location.lng();
                 document.getElementById('latitudine').value = lat;
                 document.getElementById('longitudine').value = lng;
-                error=false;
                 form.submit();
             }            
         });
         setTimeout(function(){
-            if(error) alert("error");
+            alert("Luogo non riconosciuto");
         }, 3000);
     }
     

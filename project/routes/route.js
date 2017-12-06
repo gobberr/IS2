@@ -95,17 +95,11 @@ router.post("/ritorna", function(req,res){
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
         
-        // prendo lat e lng da offro.pug
-        var lat = req.body.latitudine;
-        var lng = req.body.longitudine;
-        
-        //debug su terminale per verificare il funzionamento
-        console.log("lat: " + lat + " lng: " + lng);
-        
         var postData = {
             email: req.body.email,
             subject: req.body.subject,
-            text: req.body.text         
+            text: req.body.text,
+            location: {latitude: req.body.latitudine, longitude: req.body.longitudine}       
         }
         Corso.create(postData, function (error, user) {
             if (error) {
