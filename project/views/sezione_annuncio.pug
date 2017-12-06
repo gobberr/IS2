@@ -1,5 +1,11 @@
 doctype html
 head
+  style.
+    #map {
+      height: 200px;
+      width: 100px;
+      margin: 0 auto;
+    }
   meta(charset='utf-8')
   |     
   meta(name='viewport', content='width=device-width, initial-scale=1')
@@ -36,7 +42,7 @@ head
               .form-group
                 p.lead Posizione annuncio:
                 |
-                iframe(src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11073.207355997665!2d11.115205435220837!3d46.06502232402544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x16faa4cc65ceea27!2sUniversit%C3%A0+degli+Studi+di+Trento!5e0!3m2!1sit!2sit!4v1512139837631', width='400', height='300', frameborder='0', style='border:0', allowfullscreen='')
+                #map
                 |                                 
                 .row
                   .col-md-4
@@ -56,6 +62,23 @@ head
       .modal-footer
         button.btn.btn-secondary(type="button" data-dismiss="modal") Close
         button.btn.btn-primary(type="button") Save
+
+script.
+  // NB la variabile pos andrà inizializzata con la posizione dell'annuncio
+  var map, pos = {lat: 46.066667, lng: 11.133333};
+  function initMap() {
+    map = new google.maps.Map(document.getElementByID('map'), {
+      center: pos,
+      zoom: 15
+    });
+    var marker = new google.maps.Marker({
+          position: pos,
+          map: map
+        });
+  }
+  // NB su style - #map andrà modificata la dimensione appena la pagina sarà in funzione
+
+script(async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAyPuNc-IQgslbVyEdvq8kCrJvOQSS4Prs&callback=initMap')
 
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js', integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4', crossorigin='anonymous')
