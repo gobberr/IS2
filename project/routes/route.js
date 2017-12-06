@@ -43,8 +43,7 @@ router.post("/cerco", function(req,res){
         var subject = req.body.subject;
         
         console.log("lat: " + lat + " lng: " + lng);
-        //DA AGGIUNGERE geolocalizzazione, trasforma la location indicata nella form in longitudine e latitudine
-        //var location = req.body.location;
+
         
         Corso.findPosts(subject, function (error, post) {
             if (error || post.length===0) {
@@ -93,7 +92,12 @@ router.post("/ritorna", function(req,res){
 });
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
-        if(!logged) return res.redirect("/login");
+        
+        var lat = req.body.latitudine;
+        var lng = req.body.longitudine;
+        
+        console.log("lat: " + lat + " lng: " + lng);
+        
         var postData = {
             email: req.body.email,
             subject: req.body.subject,
