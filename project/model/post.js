@@ -27,7 +27,7 @@ var postSchema = new Schema({
 });
 
 //funzione che trova un annuncio data la MATERIA
-postSchema.statics.findPosts = function (subject, callback) {
+postSchema.statics.findPosts = function (subject, lng, lat, callback) {
 	
 	/*geocoder.geocode(location, function ( err, data ) {
   			if (err) {
@@ -51,24 +51,44 @@ postSchema.statics.findPosts = function (subject, callback) {
 		if (err) console.log(err);
   		else console.log("GEOCODING: " + result);
 	});*/
-		
-	Post.find({subject: subject/*,
-			  location : {
-				  longitude : long,
-				  latitude : latit
-			  }*/}).exec(function (err, post) {
-      if (err) {
-		//console.log("debug1");
-        return callback(err)
-      } else if (!post) {
-		console.log("\nnon trovato, " + post);
-        return callback(null);
-      }
-		else {
-			//console.log("post: " + post);
-			return callback(null, post);
-		}
-	});
+	if(subject==""){
+		Post.find({/*,
+					location : {
+						longitude : long,
+						latitude : latit
+					}*/}).exec(function (err, post) {
+				if (err) {
+			//console.log("debug1");
+					return callback(err)
+				} else if (!post) {
+			console.log("\nnon trovato, " + post);
+					return callback(null);
+				}
+			else {
+				//console.log("post: " + post);
+				return callback(null, post);
+			}
+		});
+	}
+	else{
+		Post.find({subject: subject/*,
+					location : {
+						longitude : long,
+						latitude : latit
+					}*/}).exec(function (err, post) {
+				if (err) {
+			//console.log("debug1");
+					return callback(err)
+				} else if (!post) {
+			console.log("\nnon trovato, " + post);
+					return callback(null);
+				}
+			else {
+				//console.log("post: " + post);
+				return callback(null, post);
+			}
+		});
+	}
 }
 
 var Post = mongoose.model('Post', postSchema);

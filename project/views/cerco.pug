@@ -39,21 +39,23 @@ include includes/jumbotron-light.pug
           |                         
           fieldset.form-group            
             label.form-control-label Raggio di ricerca
-            |                             
+            |                         
             .radio
               label.form-control-label
-                input(type='radio', value='option1', name='a' checked)
+                input(type='radio', value='unl', name='distance' checked)
+                | &nbsp; &nbsp; Qualsiasi
+            |    
+            .radio
+              label.form-control-label
+                input(type='radio', value='5000', name='distance' )
                 | &nbsp; &nbsp; Fino a 5km
             |                             
             .radio
               label.form-control-label
-                input(type='radio', value='option2', name='a')
+                input(type='radio', value='10000', name='distance')
                 | &nbsp; &nbsp; Fino a 10km
             |                             
-            .radio
-              label.form-control-label
-                input(type='radio', value='option2', name='a')
-                | &nbsp; &nbsp; Tutta la citt&agrave;
+            
           |
           input(type='hidden', id='latitudine', name='latitudine', value="")
           input(type='hidden', id='longitudine', name='longitudine', value="")

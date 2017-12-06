@@ -7,6 +7,8 @@ var Corso = require("../model/post");
 var Review = require("../model/review");
 var path = require('path'), fs = require('fs');
 var formidable = require('formidable');
+var geolib = require('geolib');
+
 //var bodyparser = require('body-parser');
 
 router.get("/", function(req,res,next){
@@ -37,17 +39,15 @@ router.get("/cerco", function(req,res){
 router.post("/cerco", function(req,res){
     isLoggedIn(req,res, function(logged) {  
         
-        // prendo lat e lng da cerco.pug
         var lat = req.body.latitudine;
         var lng = req.body.longitudine;
         
         var subject = req.body.subject;
-        
-        // verifico il corretto funzionamento con debug su terminale
+        var maxDistance=req.body.distance;
         console.log("lat: " + lat + " lng: " + lng);
-
-        
-        Corso.findPosts(subject, function (error, post) {
+        //DA AGGIUNGERE geolocalizzazione, trasforma la location indicata nella form in longitudine e latitudine
+        //var location = req.body.location;
+        Corso.findPosts(subject, lng, lat, function (error, post) {
             if (error || post.length===0) {
                 //non ci sono post con questa materia
                 //DA AGGIUNGERE "nessun risultato per la ricerca"
@@ -55,7 +55,24 @@ router.post("/cerco", function(req,res){
                 res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
             } else {
                 //console.log("query success: subject=" + subject + ", post=" + post);
-                res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
+                if(lat==""||maxDistance=="unl")
+                    res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
+                else{
+                    var post2= [];
+                    var a=0;
+                    
+                    for (var i = 0, len = post.length; i < len; i++) {
+                        var distance = geolib.getDistance(
+                            {latitude: lat, longitude: lng},
+                            {latitude: post[i].location.latitude, longitude: post[i].location.longitude}
+                        );
+                        if(distance<=maxDistance){
+                            post2[a]=post[i];
+                            a++;
+                        }
+                    }
+                    res.write(pug.renderFile("views/cerco.pug", {values: post2, logged: logged}));
+                }
             }
             //DA AGGIUNGERE se ci sono post con la materia ma non nella zona, visualizza i più vicini
         });
@@ -94,7 +111,7 @@ router.post("/ritorna", function(req,res){
 });
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
-        
+        if(!logged) return res.redirect("/login");
         var postData = {
             email: req.body.email,
             subject: req.body.subject,
