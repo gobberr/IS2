@@ -91,6 +91,13 @@ router.get("/registrati", function(req,res){
     });
 });
 
+router.get("/chiSiamo", function(req,res) {
+    isLoggedIn(req,res, function(logged) {
+        res.write(pug.renderFile("views/chiSiamo.pug", {logged: logged}));
+        res.end();
+    });
+});
+
 router.get("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
         if(!logged) return res.redirect("/login");        

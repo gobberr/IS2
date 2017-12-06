@@ -54,48 +54,17 @@ include includes/footer.pug
 
 
 script.
-  var map, infoWindow;
+  var map;
   function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {
-        lat: 46.066667,
-        lng: 11.133333
-    },
-    zoom: 10
-  });
-  
-  infoWindow = new google.maps.InfoWindow;
-  
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-        };
-    
-    /*
-    infoWindow.setPosition(pos);
-    infoWindow.setContent('Location found.');
-    infoWindow.open(map);
-    */
-    map.setCenter(pos);
-    var marker = new google.maps.Marker({
-        position: pos,
-        map: map
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+            lat: 46.066667,
+            lng: 11.133333
+        },
+        zoom: 10
     });
-    }, function() {
-        handleLocationError(true, infoWindow, map.getCenter());
-    });
-  } else {
-    handleLocationError(false, infoWindow, map.getCenter());
-    }
   }
-  
-  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' : 'Error: Your Browser doesnt support geolocation.');
-    infoWindow.open(map);
-  }
+
   
 script(async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAyPuNc-IQgslbVyEdvq8kCrJvOQSS4Prs&callback=initMap')
 
