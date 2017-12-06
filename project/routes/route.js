@@ -46,7 +46,7 @@ router.post("/cerco", function(req,res){
         //DA AGGIUNGERE geolocalizzazione, trasforma la location indicata nella form in longitudine e latitudine
         //var location = req.body.location;
         
-        Corso.findPosts(subject, location, function (error, post) {
+        Corso.findPosts(subject, function (error, post) {
             if (error || post.length===0) {
                 //non ci sono post con questa materia
                 //DA AGGIUNGERE "nessun risultato per la ricerca"
@@ -74,7 +74,8 @@ router.get("/registrati", function(req,res){
 });
 
 router.get("/offro", function(req,res){
-    isLoggedIn(req,res, function(logged) {        
+    isLoggedIn(req,res, function(logged) {
+        if(!logged) return res.redirect("/login");        
         res.write(pug.renderFile("views/offro.pug", {logged: logged}));
     });
 });
@@ -92,6 +93,7 @@ router.post("/ritorna", function(req,res){
 });
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
+        if(!logged) return res.redirect("/login");
         var postData = {
             email: req.body.email,
             subject: req.body.subject,
@@ -180,12 +182,6 @@ router.post("/annuncio", function(req,res){
 		});
 	//}, 3000);
       });
-});
-
-router.get("/addPost", function(req,res){
-    isLoggedIn(req,res, function(logged) {        
-        res.write(pug.renderFile("views/addPost.pug", {logged: logged}));
-    });
 });
 
 router.use("/test", test);

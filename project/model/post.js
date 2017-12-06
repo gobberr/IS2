@@ -27,7 +27,7 @@ var postSchema = new Schema({
 });
 
 //funzione che trova un annuncio data la MATERIA
-postSchema.statics.findPosts = function (subject, location, callback) {
+postSchema.statics.findPosts = function (subject, callback) {
 	
 	/*geocoder.geocode(location, function ( err, data ) {
   			if (err) {

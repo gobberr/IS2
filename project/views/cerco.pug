@@ -55,8 +55,8 @@ include includes/jumbotron-light.pug
                 input(type='radio', value='option2', name='a')
                 | &nbsp; &nbsp; Tutta la citt&agrave;
           |
-          input(type='hidden', id='latitudine', name='latitudine', value="la")
-          input(type='hidden', id='longitudine', name='longitudine', value="lo")
+          input(type='hidden', id='latitudine', name='latitudine', value="")
+          input(type='hidden', id='longitudine', name='longitudine', value="")
           |
           button.btn.btn-primary(type='button', onclick="validatePosition()" id='cerca') Cerca
     |             
@@ -132,7 +132,7 @@ script(type='text/javascript').
             }            
         });
         setTimeout(function(){
-            if(error) alert("error");
+            form.submit();
         }, 3000);
     }
 
