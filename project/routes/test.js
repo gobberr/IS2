@@ -168,7 +168,7 @@ router.get("/account", function(req,res,next){
                 return next(error);
             } 
             else {
-                res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description }));
+                res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description, pippo:req.query.error_size, pluto:req.query.error_ext }));
                 res.end();
             }
         }

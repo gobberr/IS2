@@ -5,7 +5,8 @@ var test = require("./test");
 var User = require("../model/user");
 var Corso = require("../model/post");
 var Review = require("../model/review");
-var path = require('path'), fs = require('fs');
+var path = require('path'); 
+var fs = require('fs');
 var formidable = require('formidable');
 var geolib = require('geolib');
 
@@ -256,27 +257,44 @@ router.post("/recensione", function(req,res){
 
 router.post('/upload', function (req, res) {
     
-        var form = new formidable.IncomingForm();
+        var form = new formidable.IncomingForm();    
+        var b=false;
+
+        var MAX_UPLOAD_SIZE = 5242880; // max dim 5 mb 
+        form.on('progress', function(bytesReceived, bytesExpected) {
+            if(!b){
+            if (bytesReceived > MAX_UPLOAD_SIZE) {
+                console.log('File troppo grande, massimo 5 MB');  
+                res.redirect("/test/account?error_size=true");
+                b=true;
+                //maxDimension = true;
+                //res.write(pug.renderFile("views/account.pug", {maxDimension : maxDimension}));
+            }}
+        });
+        if(!b){
         form.parse(req, function (err, fields, files) 
         {
             var extension = path.extname(files.file_upload.name);
-            console.log("trying to upload file with extension: "+ extension);
-            if(extension == ".png"){
+            console.log("trying to upload file with extension: " + extension);
+            if((extension == ".png") || (extension == ".jpg") || (extension == ".jpeg")){
                 var oldpath = files.file_upload.path;
                 var newpath = __dirname + '/../upload/' + files.file_upload.name;
                 console.log("upload succesful!");
                 fs.rename(oldpath, newpath, function (err) 
                 {
-                    if (err) throw err;                
+                    if (err) throw err;
+                    //succesful = true;                
+                    //res.write(pug.renderFile("views/account.pug", {succesful : succesful}));
                     res.redirect("/test/account");                        
                 });
             }
             else{
                 console.log("upload NOT succesful because of file extension not allowed!");
-                res.redirect("/test/account");
+                //res.write(pug.renderFile("views/account.pug", {extension : extension}));
+                res.redirect("/test/account?error_ext=true");                
             }
-        });
-    
+        }); 
+    }   
 });
 
 module.exports = router;
