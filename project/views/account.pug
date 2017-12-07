@@ -72,6 +72,11 @@ head
         br
         br
         br
+        -var foto=false
+        if foto
+          img(src="https://idobu.org/static/img/avatar.png", alt="avatar", width="150", height="150")
+        else
+          img(src="https://exelord.github.io/ember-initials/images/default-d5f51047d8bd6327ec4a74361a7aae7f.jpg", alt="avatar", width="150", height="150")
         form(method='post', enctype='multipart/form-data', action='/upload')          
             .form-group
               label Aggiorna la tua immagine di profilo

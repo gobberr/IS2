@@ -259,13 +259,22 @@ router.post('/upload', function (req, res) {
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) 
         {
-            var oldpath = files.file_upload.path;
-            var newpath = __dirname + '/../upload/' + files.file_upload.name;
-            fs.rename(oldpath, newpath, function (err) 
-            {
-                if (err) throw err;                
-                res.redirect("/test/account");                        
-            });
+            var extension = path.extname(files.file_upload.name);
+            console.log("trying to upload file with extension: "+ extension);
+            if(extension == ".png"){
+                var oldpath = files.file_upload.path;
+                var newpath = __dirname + '/../upload/' + files.file_upload.name;
+                console.log("upload succesful!");
+                fs.rename(oldpath, newpath, function (err) 
+                {
+                    if (err) throw err;                
+                    res.redirect("/test/account");                        
+                });
+            }
+            else{
+                console.log("upload NOT succesful because of file extension not allowed!");
+                res.redirect("/test/account");
+            }
         });
     
 });
