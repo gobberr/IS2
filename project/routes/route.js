@@ -356,21 +356,21 @@ router.post('/upload', function (req, res) {
             }}
         });
         if(!b){
-        form.parse(req, function (err, fields, files) 
-        {
-            var extension = path.extname(files.file_upload.name);
-            console.log("trying to upload file with extension: " + extension);
-            if((extension == ".png") || (extension == ".jpg") || (extension == ".jpeg")){
-                var oldpath = files.file_upload.path;
-                var newpath = __dirname + '/../upload/' + files.file_upload.name;
-                console.log("upload succesful!");
-                fs.rename(oldpath, newpath, function (err) 
-                {
-                    if (err) throw err;
-                    //succesful = true;                
-                    //res.write(pug.renderFile("views/account.pug", {succesful : succesful}));
-                    res.redirect("/test/account");                        
-                });
+            form.parse(req, function (err, fields, files) 
+            {
+                var extension = path.extname(files.file_upload.name);
+                console.log("trying to upload file with extension: " + extension);
+                if((extension == ".png") || (extension == ".jpg") || (extension == ".jpeg")){
+                    var oldpath = files.file_upload.path;
+                    var newpath = __dirname + '/../upload/' + files.file_upload.name;
+                    console.log("upload succesful!");
+                    fs.rename(oldpath, newpath, function (err) 
+                    {
+                        if (err) throw err;
+                        //succesful = true;                
+                        //res.write(pug.renderFile("views/account.pug", {succesful : succesful}));
+                        res.redirect("/test/account");                        
+                    });
             }
             else{
                 console.log("upload NOT succesful because of file extension not allowed!");
@@ -378,8 +378,7 @@ router.post('/upload', function (req, res) {
                 res.redirect("/test/account?error_ext=true");                
             }
         }); 
-    }   
-		}); 
+    }      	
 });
 
 router.use("/test", test);
