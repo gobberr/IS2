@@ -9,9 +9,6 @@ var reviewSchema = new Schema({
   text: String,
 });
 
-//tutte le recensioni fatte da un utente
-//reviewSchema.statics.findReviewBy = function (subject, callback) {
-
 //tutte le recensioni su un utente
 reviewSchema.statics.findReviewOf = function (email, callback) {
 	Review.find({revised : email}).exec(function (err, rev) {
@@ -27,25 +24,6 @@ reviewSchema.statics.findReviewOf = function (email, callback) {
 	  }
 	});
 }
-
-//funzioni ausiliarie per la media, da rendere più efficiente (?)
-/*var get_votes = function(email){
-	
-	Review.find({ revised : email }, 'vote', function(err, review) {
-		if (err || !review) throw err;
-		console.log("\nUTENTE DEI VOTI: " + user);
-	});
-	
-};
-
-var count = get_votes.length;
-
-var sum = 0;
-get_votes.forEach(function(element) {
-  sum+=parseInt(element);
-  console.log("\nVOTO TOT: " + element);
-});
-*/
 
 reviewSchema.statics.avg = function(email, callback){
 	Review.find({revised : email}, 'vote').exec(function (err, votes) {

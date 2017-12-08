@@ -19,7 +19,13 @@ head
       .col-md-12
         .row
           .col-md-6
-            p.lead.h3 #{utente.name} #{utente.surname}
+            form(method='post', action='/pubblico')
+              .form-group
+                input.form-control(type="hidden", value=utente.email, name="userpublic")
+                | 
+                input.form-control(type="hidden", value=recensioni, name="reviewpublic")
+                | 
+                button.btn.btn-primary(type="submit") #{utente.name} #{utente.surname}
             |  
             img.img-fluid.d-block.mb-3.rounded.w-75(src='../../30818238-Avatar-Profilo-maschile-uso-picture-per-il-sito-web-sociale-Vector--Archivio-Fotografico.jpg')
             |

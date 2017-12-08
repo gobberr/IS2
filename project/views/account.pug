@@ -14,7 +14,7 @@ head
         h1 Gestione account
       |                 
       .col-md-6
-        a.btn.btn-primary(href='') Home Page
+        a.btn.btn-primary(href='/') Home Page
 |     
 .py-5
   .container
@@ -45,7 +45,6 @@ head
             |                             
             form(method='post', action='#')
               .form-group
-                - var password;
                 label.form-control-label Modifica password
                 |                                     
                 input.form-control(type='password', placeholder='Inserisci la tua vecchia password', name='old_password')
@@ -63,7 +62,10 @@ head
           .form-group
             label Modifica la descrizione del tuo profilo
             |  
-            textarea(rows='4', cols='50')=descrizione 
+            br
+            br
+            | 
+            input.textarea(type='text', placeholder='Aggiungi qualche informazione su di te!', value=descrizione, name='descrizione', style='height:100px; width:400px')
           |
           input.form-control(type="hidden", value="form-4", name="formid")
           |                         
