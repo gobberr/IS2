@@ -50,7 +50,7 @@ userSchema.pre('save', function (next) {
   })
 });
 
-//funzione per trovare un utente corrispondente ai parametri passati
+//funzione per trovare un utente corrispondente all'email passata
 userSchema.statics.findByEmail = function (email, callback) {
 	User.findOne({ email : email }).exec(function (err, user) {
       if (err) {

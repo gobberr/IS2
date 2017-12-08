@@ -23,13 +23,11 @@ router.post("/addreview", function(req,res){
 	var utente = req.body.utente;
 	var anntxt = req.body.anntxt;
 	var ritorna = req.body.ritorna;
-	/*console.log("utente: " + utente);
-	console.log("annuncio: " + anntxt);
-	console.log("subject: " + ritorna + "\n\n");*/
+	
 	res.write(pug.renderFile("views/add_recensione.pug", {utente: utente, ritorna : ritorna, anntxt : anntxt}));
 });
 
-//quando carica la prima volta la pagina di ricerca, non ci sono parametri
+//quando carica la prima volta la pagina di ricerca, non ci sono parametri e non visualizza annunci
 router.get("/cerco", function(req,res){
     isLoggedIn(req,res, function(logged) {       
         res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
@@ -37,6 +35,9 @@ router.get("/cerco", function(req,res){
 });
 
 //quando riceve una richiesta e ricarica la pagina con i risultati
+//ricerca un annuncio per materia e zona (con filtro distanza)
+//SE non viene specificata la materia, visualizza tutti gli annunci nella zona selezionata (tenendo conto del filtro distanza)
+//SE non viene specificata la zona, visualizza tutti gli annunci con la materia specificata
 router.post("/cerco", function(req,res){
     isLoggedIn(req,res, function(logged) {  
         
@@ -46,19 +47,16 @@ router.post("/cerco", function(req,res){
         var subject = req.body.subject;
         var maxDistance=req.body.distance;
         console.log("lat: " + lat + " lng: " + lng);
-        //DA AGGIUNGERE geolocalizzazione, trasforma la location indicata nella form in longitudine e latitudine
-        //var location = req.body.location;
-        Corso.findPosts(subject, lng, lat, function (error, post) {
+        
+        Corso.findPosts(subject, function (error, post) {
             if (error || post.length===0) {
-                //non ci sono post con questa materia
-                //DA AGGIUNGERE "nessun risultato per la ricerca"
                 console.log("nessun risultato dalla query");
                 res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
             } else {
                 //console.log("query success: subject=" + subject + ", post=" + post);
                 if(lat==""||maxDistance=="unl")
                     res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
-                else{
+                else {
                     var post2= [];
                     var a=0;
                     
@@ -75,7 +73,6 @@ router.post("/cerco", function(req,res){
                     res.write(pug.renderFile("views/cerco.pug", {values: post2, logged: logged}));
                 }
             }
-            //DA AGGIUNGERE se ci sono post con la materia ma non nella zona, visualizza i più vicini
         });
     });
 });
@@ -86,10 +83,150 @@ router.get("/login", function(req,res) {
     });
 });
 
+router.post("/login", function(req,res,next){
+    var email = req.body.email;
+    var password = req.body.password;    
+    // find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
+    User.authenticate(email, password, function (error, user) {
+        if (error || !user) {
+            res.redirect('/login?error=true');
+        } 
+        else {
+            req.session.userId = user._id;
+			req.session.emailUser = user.email;
+            return res.redirect('/');
+        }
+    });
+});
+
+router.get('/logout', function (req, res, next) {
+    if (req.session) {
+        // delete session object
+        req.session.destroy(function (err) {
+            if (err) {
+                return next(err);
+            } 
+            else 
+            {
+                return res.redirect('/');
+            }
+        });
+    }
+});
+
 router.get("/registrati", function(req,res){
     isLoggedIn(req,res, function(logged) {        
         res.write(pug.renderFile("views/registration.pug", {logged: logged}));
     });
+});
+
+router.get("/pubblico", function(req,res) {
+	res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : [], posts : []}));
+});
+
+router.post("/pubblico", function(req,res) {
+	var userpublic = req.body.userpublic;
+	var reviewpublic = req.body.reviewpublic;
+	//console.log(userpublic + ", " + reviewpublic);
+	
+	User.findByEmail(userpublic, function(error, user) {
+		if(error || !user) {
+			console.log(error);
+			res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : reviewpublic, posts : []}));
+		} else {
+			//console.log(user);
+			Corso.findUserPosts(userpublic, function(error, post){
+				if (error || !post) {
+					console.log(error);
+					res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : []}));
+				} else {
+					//console.log(post);
+					console.log(user);
+					console.log(reviewpublic);
+					console.log(user.skills.length);
+					res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : post}));
+				}
+			});
+		}
+	});
+});
+
+router.get("/account", function(req,res,next){
+    User.findById(req.session.userId)
+    .exec(function (error, user) {
+        if (error) {
+            return next(error);
+        } 
+        else {
+            if (user === null) {
+                return next(error);
+            } 
+            else {
+                res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description }));
+                res.end();
+            }
+        }
+    });
+    
+});
+
+router.post("/account", function(req,res){
+    var form = req.body.formid;
+    
+    if(form=="form-1")
+    {
+        //var tel = req.body.telephone;
+        
+    User.findByIdAndUpdate(req.session.userId, {telephone: req.body.new_telephone}).exec();
+    }
+    else if(form=="form-2")
+    User.findByIdAndUpdate(req.session.userId, {email: req.body.email}).exec();
+    
+    else if(form=="form-3")
+    {
+    
+            User.findById(req.session.userId).exec(function(error,user){
+                if(error)
+                    console.log();
+                else{
+                    bcrypt.compare(req.body.old_password, user.password, function(err,response){
+                        if(response==true)
+                            if(req.body.new_password1==req.body.new_password2){
+                                user.password=req.body.new_password1;
+                                user.save();
+                            }
+
+                    });
+                }
+            });
+        
+    
+    }
+    else if(form=="form-4")
+    User.findByIdAndUpdate(req.session.userId, {description: req.body.descrizione}).exec();
+    
+    
+    else if(form=="form-5")
+    User.findByIdAndUpdate(req.session.userId, {$push: {skills: req.body.competenza}}).exec();
+    
+    else if(form=="form-6")
+    User.findByIdAndUpdate(req.session.userId, {$pull: {skills: req.body.delskill}}).exec();
+    
+    User.findById(req.session.userId)
+    .exec(function (error, user) {
+        if (error) {
+           // return next(error);
+        } 
+        else {
+            if (user === null) {
+                //return next(error);
+            } 
+            else {
+                res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description }));
+                res.end();
+            }
+        }
+    });    
 });
 
 router.get("/chiSiamo", function(req,res) {
@@ -106,17 +243,6 @@ router.get("/offro", function(req,res){
     });
 });
 
-router.post("/ritorna", function(req,res){
-	var subject = req.body.subject;
-	
-	Corso.findPosts(subject, function (error, post) {
-        if (error || post.length===0) {
-			res.write(pug.renderFile("views/cerco.pug", {values: []}));
-        } else {
-			res.write(pug.renderFile("views/cerco.pug", {values: post}));
-        }
-    });
-});
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
         if(!logged) return res.redirect("/login");
@@ -139,6 +265,18 @@ router.post("/offro", function(req,res){
     });
 });
 
+router.post("/ritorna", function(req,res){
+	var subject = req.body.subject;
+	
+	Corso.findPosts(subject, function (error, post) {
+        if (error || post.length===0) {
+			res.write(pug.renderFile("views/cerco.pug", {values: []}));
+        } else {
+			res.write(pug.renderFile("views/cerco.pug", {values: post}));
+        }
+    });
+});
+
 router.get("/annuncio", function(req,res){
     isLoggedIn(req,res, function(logged) {        
         res.write(pug.renderFile("views/annuncio.pug", {logged: logged}));
@@ -147,43 +285,22 @@ router.get("/annuncio", function(req,res){
 
 router.post("/annuncio", function(req,res){
       isLoggedIn(req,res,function(logged){
-	var user = req.body.utente;
-	var anntxt = req.body.anntxt;
-	var ritorna = req.body.ritorna;
-    /*console.log("utente: " + user);
-	console.log("annuncio: " + anntxt);
-	console.log("subject: " + ritorna + "\n\n");*/
-	//console.log("UTENTE PASSATO ALLA QUERY: " + user + "\n\n");
-	var recensioni = [];
-	
-	//setTimeout( function() {
-		Review.findReviewOf(user, function(error, rs) {
-			if (error || rs.length===0) {
-				console.log("\nnessun risultato dalla query recensioni");
-				//recensioni.push("nessun risultato dalla query");
-				res.write(pug.renderFile("views/annuncio.pug", {recensioni : [], utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
-				//res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni}));
-			} else {
-				//console.log("\nquery success: email=" + user + ", utente=" + em);
-				//console.log("\n++++++++++++++\n");
-				for (var i=0; i<rs.length; i++) {
-					recensioni.push(rs[i]);
-					//console.log("elemento: " + recensioni[i] + ", aggiunto\n");	
-				}
-				
-				//console.log("\n++++++++++++++\n");
-				User.findByEmail(user, function(error, em) {
-					if (error || !em) {
-						console.log("\nnessun risultato dalla query utenti");
-						//res.write(pug.renderFile("views/annuncio.pug", {utente: "utente sconosciuto"}));
-						//var utente = "utente sconosciuto";
-						//console.log("UTENTE NON TROVATO\n\n");
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
+		  var user = req.body.utente;
+		  var anntxt = req.body.anntxt;
+		  var ritorna = req.body.ritorna;
+		  var recensioni = [];
+		  
+		  
+		  User.findByEmail(user, function(error, em) {
+		  	if (error || !em) {
+				console.log("\nnessun risultato dalla query utenti");
+				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged : logged}));
+		  	} else {
+				Review.findReviewOf(user, function(error, rs) {
+					if (error || rs.length===0) {
+						console.log("\nnessun risultato dalla query recensioni");
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
 					} else {
-						//console.log("\nquery success: user=" + em);
-						//var utente = em;
-						//console.log("UTENTE TROVATO:" + em + "\n\n");
-						
 						Review.avg(user, function(error, media) {
 							if (error) {
 								console.log(error);
@@ -194,49 +311,17 @@ router.post("/annuncio", function(req,res){
 								for(var i=0; i<media.length; i++) {
 									sum += media[i].vote;
 								}
-								
 								res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : sum/count, numero : media.length, logged:logged}));
 							}
-						})
-						
-						
-						//res.write(pug.renderFile("views/annuncio.pug", {utente : em}));
-						
+						});
 					}
-					//res.end();
 				});
 			}
-		});
-	//}, 3000);
-      });
+		  });
+	});
 });
 
-router.use("/test", test);
-
-function isLoggedIn(req, res, callback) {
-    User.findById(req.session.userId)
-    .exec(function (error, user) {
-        if (error) {
-            return callback(false);
-        } 
-        else {
-            if (user === null) {
-                return callback(false);
-            }
-            else {
-                return callback(true);
-            }
-        }
-    });
-}
-
 router.post("/recensione", function(req,res){
-	var utente = req.body.utente;
-	var anntxt = req.body.anntxt;
-	var ritorna = req.body.ritorna;
-	//console.log("SESSIONE: " + req.session.userId);
-	
-	
 	var reviewData = {
 		reviewer: req.session.emailUser,
         revised: req.body.utente,
@@ -247,8 +332,7 @@ router.post("/recensione", function(req,res){
 	Review.create(reviewData, function (error, user) {
         if (error) {
             return console.log(error);
-        }
-        else {
+        } else {
             console.log("recensione creata!");
 			res.redirect("/cerco");
         }
@@ -295,6 +379,26 @@ router.post('/upload', function (req, res) {
             }
         }); 
     }   
+		}); 
 });
+
+router.use("/test", test);
+
+function isLoggedIn(req, res, callback) {
+    User.findById(req.session.userId)
+    .exec(function (error, user) {
+        if (error) {
+            return callback(false);
+        } 
+        else {
+            if (user === null) {
+                return callback(false);
+            }
+            else {
+                return callback(true);
+            }
+        }
+    });
+}
 
 module.exports = router;

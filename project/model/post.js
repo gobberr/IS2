@@ -1,18 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-/*var GoogleMapsAPI = require('googlemaps');
-
-var publicConfig = {
-  key: 'AIzaSyAyPuNc-IQgslbVyEdvq8kCrJvOQSS4Prs',
-  stagger_time:       1000, // for elevationPath
-  encode_polylines:   false,
-  secure:             true, // use https
-  proxy:              'http://127.0.0.1:4000' // optional, set a proxy for HTTP requests
-};
-
-var gmAPI = new GoogleMapsAPI(publicConfig);*/
-
 // create a schema
 // offerta ripetizioni
 var postSchema = new Schema({
@@ -26,70 +14,51 @@ var postSchema = new Schema({
   },
 });
 
-//funzione che trova un annuncio data la MATERIA
-postSchema.statics.findPosts = function (subject, lng, lat, callback) {
-	
-	/*geocoder.geocode(location, function ( err, data ) {
-  			if (err) {
-				console.log(err);
+//funzione che trova un annuncio in base alla materia, se specificata
+postSchema.statics.findPosts = function (subject, callback) {
+	if(subject=="") {
+		Post.find({}).exec(function (err, post) {
+			if (err) {
+				//console.log("debug1");
+				return callback(err)
+			} else if (!post) {
+				console.log("\nnon trovato, " + post);
+				return callback(null);
 			} else {
-				var long = toString(data[0].geometry.location.lng());
-				var latit = toString(data[0].geometry.location.lat());
-				console.log(long + ", " + latit);
-			}
-	});*/
-	
-	/*var geocodeParams = {
-  			"address":    "121, Curtain Road, EC2A 3AD, London UK",
-  			"components": "components=country:GB",
-  			"bounds":     "55,-1|54,1",
-  			"language":   "en",
-  			"region":     "uk"
-	};
-
-	gmAPI.geocode(geocodeParams, function(err, result){
-		if (err) console.log(err);
-  		else console.log("GEOCODING: " + result);
-	});*/
-	if(subject==""){
-		Post.find({/*,
-					location : {
-						longitude : long,
-						latitude : latit
-					}*/}).exec(function (err, post) {
-				if (err) {
-			//console.log("debug1");
-					return callback(err)
-				} else if (!post) {
-			console.log("\nnon trovato, " + post);
-					return callback(null);
-				}
-			else {
 				//console.log("post: " + post);
 				return callback(null, post);
 			}
 		});
-	}
-	else{
-		Post.find({subject: subject/*,
-					location : {
-						longitude : long,
-						latitude : latit
-					}*/}).exec(function (err, post) {
+	} else {
+		Post.find({subject: subject})
+			.exec(function (err, post) {
 				if (err) {
-			//console.log("debug1");
+					//console.log("debug1");
 					return callback(err)
 				} else if (!post) {
-			console.log("\nnon trovato, " + post);
+					console.log("\nnon trovato, " + post);
 					return callback(null);
+				} else {
+					//console.log("post: " + post);
+					return callback(null, post);
 				}
-			else {
-				//console.log("post: " + post);
-				return callback(null, post);
-			}
-		});
+			});
 	}
 }
+
+//funzione che trova tutti gli annunci di un utente
+postSchema.statics.findUserPosts = function (user, callback) {
+	Post.find({email : user}).exec(function (err, post) {
+		if (err) {
+			return callback(err);
+		} else if (!post) {
+			return callback(null);
+		} else {
+			return callback(null, post);
+		}
+	});
+}
+
 
 var Post = mongoose.model('Post', postSchema);
 

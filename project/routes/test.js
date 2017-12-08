@@ -72,40 +72,8 @@ router.post("/registrazione", function(req,res,next){
 
 });
 
-    
-
-router.post("/login", function(req,res,next){
-    var email = req.body.email;
-    var password = req.body.password;    
-    // find each person with a last name matching 'Ghost', selecting the `name` and `occupation` fields
-    User.authenticate(email, password, function (error, user) {
-        if (error || !user) {
-            res.redirect('/login?error=true');
-        } 
-        else {
-            req.session.userId = user._id;
-			req.session.emailUser = user.email;
-            return res.redirect('/');
-        }
-    });
-});
-
-router.get('/logout', function (req, res, next) {
-    if (req.session) {
-        // delete session object
-        req.session.destroy(function (err) {
-            if (err) {
-                return next(err);
-            } 
-            else 
-            {
-                return res.redirect('/');
-            }
-        });
-    }
-});
-
-router.get('/profile', function (req, res, next) {
+//trying to retrieve user informations
+/*router.get('/profile', function (req, res, next) {
     User.findById(req.session.userId)
     .exec(function (error, user) {
         if (error) {
@@ -120,7 +88,7 @@ router.get('/profile', function (req, res, next) {
             }
         }
     });
-});
+});*/
 
 
 router.post("/addPost", function(req,res,next){
