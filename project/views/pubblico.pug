@@ -29,7 +29,7 @@ include includes/header.pug
                       .col-md-7
                         br
                         | 
-                        img.img-fluid.d-block.mb-3.rounded.w-75(src='../../30818238-Avatar-Profilo-maschile-uso-picture-per-il-sito-web-sociale-Vector--Archivio-Fotografico.jpg')
+                        img(src=imageDir, alt="avatar", width="150", height="150")
                         | 
                         br
                         h6 "[ #{utente.description} ]"
@@ -93,13 +93,14 @@ include includes/header.pug
         br
         br
         include sezione_recensione.pug
-      |                 
-      .col-md-6
-        form(method='POST', action='/addreview')
-          .form-group
-            input.form-control(type='hidden' value=utente.email name='utente')
-            | 
-            button.btn.btn-primary(type='submit') Aggiungi recensione
+      |
+      if (logged)                 
+        .col-md-6
+          form(method='POST', action='/addreview')
+            .form-group
+              input.form-control(type='hidden' value=utente.email name='utente')
+              | 
+              button.btn.btn-primary(type='submit') Aggiungi recensione
 include includes/footer.pug
 |     
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')

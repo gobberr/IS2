@@ -37,9 +37,16 @@ include includes/navbar.pug
                       .col-md-12
                         .card               
                           .card-body
-                            h5 Notifica relativa all'annuncio #{message.post} effettuata da #{message.sender}
+                            h5 Notifica relativa all'annuncio #{message.post} effettuata da #{message.sender} nNot=#{nNotifications}
                             |                         
                             p.p-y-1 Puoi ricontattarlo al seguente indirizzo: #{message.contact}
+                if (nNotifications==1)
+                  form(method='POST', action='/setMessagesReaded')
+                    .form-group
+                      |
+                      button.btn.btn-primary(type='submit') Segna tutti i messaggi come letti
+                else
+                  - nNotifications--;
               else
                 if (!readed)
                   h3 Messaggi già letti:
@@ -53,11 +60,17 @@ include includes/navbar.pug
                             h5 Notifica relativa all'annuncio #{message.post} effettuata da #{message.sender}
                             |                         
                             p.p-y-1 Puoi ricontattarlo al seguente indirizzo #{message.contact}
+            if (!readed && !toRead)
+              h3 Nessun messaggio da visualizzare
+              .py-3
+                .container
+                  .row
+                    .col-md-12
+                      
+                      br
+                      br
 
-            form(method='POST', action='/setMessagesReaded')
-              .form-group
-                |
-                button.btn.btn-primary(type='submit') Segna tutti i messaggi come letti
+            
     |             
     .row
       .col-md-12

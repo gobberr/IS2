@@ -7,7 +7,10 @@
           h5 Media voto dell'utente: #{media} (su #{numero} recensioni):
           |
           if (recensioni.length===0)
-            h5 Nessuna recensione per questo utente! ...aggiungila tu per primo!
+            if (logged)
+              h5 Nessuna recensione per questo utente! ...aggiungila tu per primo!
+            else
+              h5 Nessuna recensione per questo utente!
           else
             each rev in recensioni
               if(rev.text!="")
