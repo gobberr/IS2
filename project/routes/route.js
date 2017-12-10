@@ -409,6 +409,13 @@ router.post('/upload', function (req, res) {
     
         var form = new formidable.IncomingForm();    
         var b=false;
+        var user_id = req.session.userId;
+        //console.log("user id: " + user_id);
+        var fileType;
+	    form.on('file', function (name, file) {
+	    	fileType = file.type.split('/').pop();
+	    	//console.log(fileType);
+		});
 
         var MAX_UPLOAD_SIZE = 5242880; // max dim 5 mb 
         form.on('progress', function(bytesReceived, bytesExpected) {
@@ -428,7 +435,7 @@ router.post('/upload', function (req, res) {
                 console.log("trying to upload file with extension: " + extension);
                 if((extension == ".png") || (extension == ".jpg") || (extension == ".jpeg")){
                     var oldpath = files.file_upload.path;
-                    var newpath = __dirname + '/../upload/' + files.file_upload.name;
+                    var newpath = __dirname + '/../upload/' + user_id + "." + fileType;
                     console.log("upload succesful!");
                     fs.rename(oldpath, newpath, function (err) 
                     {
