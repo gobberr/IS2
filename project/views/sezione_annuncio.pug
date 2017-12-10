@@ -3,7 +3,7 @@ head
   style.
     #map {
       height: 200px;
-      width: 100px;
+      width: 100%;
       margin: 0 auto;
     }
   meta(charset='utf-8')
@@ -73,7 +73,7 @@ script.
   // NB la variabile pos andrà inizializzata con la posizione dell'annuncio
   var map, pos = {lat: 46.066667, lng: 11.133333};
   function initMap() {
-    map = new google.maps.Map(document.getElementByID('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
       center: pos,
       zoom: 15
     });

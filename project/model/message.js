@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 // create a schema
 var messageSchema = new Schema({
-  text: { type: String, required: true },
+  contact: { type: String, required: true },
   sender: { type: String, required: true },
   reciver: { type: String, required: true },
 });

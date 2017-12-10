@@ -10,8 +10,8 @@ var reviewSchema = new Schema({
 });
 
 //tutte le recensioni su un utente
-reviewSchema.statics.findReviewOf = function (email, callback) {
-	Review.find({revised : email}).exec(function (err, rev) {
+reviewSchema.statics.findReviewOf = function (id, callback) {
+	Review.find({revised : id}).exec(function (err, rev) {
       if (err) {
 		//console.log("\nerrore");
 		return callback(err);

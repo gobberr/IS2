@@ -18,9 +18,9 @@ include includes/jumbotron-light.pug
         form(action='/offro', method="POST", id='form', name='form')
         
           .form-group
-            label Titolo Annuncio
+            label Testo Annuncio
             |                                     
-            input.form-control(type='text', placeholder='Inserisci il titolo', name="text" required)
+            input.form-control(type='text', placeholder='Inserisci il testo', name="text" required)
           |                                 
           .form-group
             label Per che corso?
@@ -28,14 +28,9 @@ include includes/jumbotron-light.pug
             input.form-control(type='text', placeholder='Inserisci la materia', name="subject" required)
           |                                 
           .form-group
-            label Email
-            |                                     
-            input.form-control(type='email', placeholder='nome.cognome@studenti.unitn.it', name="email" required)
-          |                                 
-          .form-group
             label Dove?
             |                                     
-            input.form-control(type='text', id='position', placeholder='Inserisci dove sei disponibile', name="location")
+            input.form-control(type='text', id='position', placeholder='Inserisci dove sei disponibile', name="location" required)
           |
           input(type='hidden', id='latitudine', name='latitudine', value='la')
           input(type='hidden', id='longitudine', name='longitudine', value="lo")

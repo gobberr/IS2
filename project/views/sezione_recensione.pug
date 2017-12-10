@@ -18,17 +18,18 @@ head
             h5 Nessuna recensione per questo utente! ...aggiungila tu per primo!
           else
             each rev in recensioni
-              .py-1
-                .container
-                  .row
-                    .card
-                      .card-header 
-                        h5 Recensione di: #{rev.reviewer}
-                      |                     
-                      .card-body
-                        h6 Voto: #{rev.vote}
-                        |                         
-                        h6 Commento: #{rev.text}
+              if(rev.text!="")
+                .py-1
+                  .container
+                    .row
+                      .card
+                        .card-header 
+                          h5 Recensione di: #{rev.reviewer}
+                        |                     
+                        .card-body
+                          h6 Voto: #{rev.vote}
+                          |                         
+                          h6 Commento: #{rev.text}
 
 
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')

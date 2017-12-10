@@ -8,7 +8,7 @@ head
   |     
   link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
 
-include includes/header.pug
+include includes/navbar.pug
 
 .py-3
   .container
@@ -39,7 +39,7 @@ include includes/header.pug
       .col-md-6
         form(method='POST', action='/addreview')
           .form-group
-            input.form-control(type='hidden' value=utente.email name='utente')
+            input.form-control(type='hidden' value=utente._id name='idUtente')
             |
             button.btn.btn-primary(type='submit') Aggiungi recensione
 |     

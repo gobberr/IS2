@@ -19,18 +19,21 @@ router.get("/", function(req,res,next){
     });
 });
 
-router.post("/addreview", function(req,res){
-	var utente = req.body.utente;
-	var anntxt = req.body.anntxt;
-	var ritorna = req.body.ritorna;
-	
-	res.write(pug.renderFile("views/add_recensione.pug", {utente: utente, ritorna : ritorna, anntxt : anntxt}));
-});
+
+
 
 //quando carica la prima volta la pagina di ricerca, non ci sono parametri e non visualizza annunci
 router.get("/cerco", function(req,res){
     isLoggedIn(req,res, function(logged) {       
-        res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
+        var subject = "";
+        Corso.findPosts(subject, function (error, post) {
+            if (error || post.length===0) {
+                console.log("nessun risultato dalla query");
+                res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
+            } else {
+                res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
+            }
+        });
     });
 });
 
@@ -46,7 +49,6 @@ router.post("/cerco", function(req,res){
         
         var subject = req.body.subject;
         var maxDistance=req.body.distance;
-        console.log("lat: " + lat + " lng: " + lng);
         
         Corso.findPosts(subject, function (error, post) {
             if (error || post.length===0) {
@@ -120,113 +122,160 @@ router.get("/registrati", function(req,res){
     });
 });
 
+router.post("/registrazione", function(req,res,next){
+    if (req.body.password !== req.body.confpassword) {
+        var err = new Error('Passwords do not match.');
+        err.status = 400;
+        res.send("passwords dont match");
+        return next(err);
+    }
+    
+    if (req.body.email && req.body.nome && req.body.cognome && req.body.password && req.body.confpassword) {
+        var domain;
+        var userData = {
+            email: req.body.email,
+            name: req.body.nome,
+            surname: req.body.cognome,            
+            password: req.body.password,
+            passwordConf: req.body.confpassword,
+        }
+        domain = userData.email.split("@");
+        if(domain[1]==="unitn.it"|| domain[1]==="studenti.unitn.it"||domain[1]==="alumni.unitn.it")
+        {
+            User.create(userData, function (error, user) {
+                if (error) {
+                    return next(error);
+                }
+                else {
+                    req.session.userId = user._id;
+                    console.log("utente creato e sessione avviata");
+                    return res.redirect('/successfullyRegistered');
+                }
+            });
+        }
+        else
+            res.send("Email non valida");
+    }
+
+});
+
+
 router.get("/pubblico", function(req,res) {
-	res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : [], posts : []}));
+    isLoggedIn(req,res, function(logged) {
+        res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : [], posts : [], logged: logged}));
+    });
 });
 
 router.post("/pubblico", function(req,res) {
-	var userpublic = req.body.userpublic;
-	var reviewpublic = req.body.reviewpublic;
-	//console.log(userpublic + ", " + reviewpublic);
-	
-	User.findByEmail(userpublic, function(error, user) {
-		if(error || !user) {
-			console.log(error);
-			res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : reviewpublic, posts : []}));
-		} else {
-			//console.log(user);
-			Corso.findUserPosts(userpublic, function(error, post){
-				if (error || !post) {
-					console.log(error);
-					res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : []}));
-				} else {
-					//console.log(post);
-					console.log(user);
-					console.log(reviewpublic);
-					console.log(user.skills.length);
-					res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : post}));
-				}
-			});
-		}
-	});
+    isLoggedIn(req,res, function(logged) {
+        var userpublic = req.body.userpublic;
+        var reviewpublic = req.body.reviewpublic;
+        //console.log(userpublic + ", " + reviewpublic);
+        
+        User.findByEmail(userpublic, function(error, user) {
+            if(error || !user) {
+                console.log(error);
+                res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : reviewpublic, posts : [], logged: logged}));
+            } else {
+                //console.log(user);
+                Corso.findUserPosts(user._id, function(error, post){
+                    if (error || !post) {
+                        console.log(error);
+                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : [], logged: logged}));
+                    } else {
+                        //console.log(post);
+                        console.log(user);
+                        console.log(reviewpublic);
+                        console.log(user.skills.length);
+                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : post, logged: logged}));
+                    }
+                });
+            }
+        });
+    });
 });
 
 router.get("/account", function(req,res,next){
-    User.findById(req.session.userId)
-    .exec(function (error, user) {
-        if (error) {
-            return next(error);
-        } 
-        else {
-            if (user === null) {
+    isLoggedIn(req,res, function(logged) {
+        if(!logged) return res.redirect("/login");
+        User.findById(req.session.userId)
+        .exec(function (error, user) {
+            if (error) {
                 return next(error);
             } 
             else {
-                res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description }));
-                res.end();
+                if (user === null) {
+                    return next(error);
+                } 
+                else {
+                    res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description, pippo:req.query.error_size, pluto:req.query.error_ext, logged: logged}));
+                    res.end();
+                }
             }
-        }
+        });
     });
-    
 });
 
 router.post("/account", function(req,res){
-    var form = req.body.formid;
-    
-    if(form=="form-1")
-    {
-        //var tel = req.body.telephone;
+    isLoggedIn(req,res, function(logged) {
+        if(!logged) return res.redirect("/login");
+        var form = req.body.formid;
         
-    User.findByIdAndUpdate(req.session.userId, {telephone: req.body.new_telephone}).exec();
-    }
-    else if(form=="form-2")
-    User.findByIdAndUpdate(req.session.userId, {email: req.body.email}).exec();
-    
-    else if(form=="form-3")
-    {
-    
-            User.findById(req.session.userId).exec(function(error,user){
-                if(error)
-                    console.log();
-                else{
-                    bcrypt.compare(req.body.old_password, user.password, function(err,response){
-                        if(response==true)
-                            if(req.body.new_password1==req.body.new_password2){
-                                user.password=req.body.new_password1;
-                                user.save();
-                            }
+        if(form=="form-1")
+        {
+            //var tel = req.body.telephone;
+            
+        User.findByIdAndUpdate(req.session.userId, {telephone: req.body.new_telephone}).exec();
+        }
+        else if(form=="form-2")
+        User.findByIdAndUpdate(req.session.userId, {email: req.body.email}).exec();
+        
+        else if(form=="form-3")
+        {
+        
+                User.findById(req.session.userId).exec(function(error,user){
+                    if(error)
+                        console.log();
+                    else{
+                        bcrypt.compare(req.body.old_password, user.password, function(err,response){
+                            if(response==true)
+                                if(req.body.new_password1==req.body.new_password2){
+                                    user.password=req.body.new_password1;
+                                    user.save();
+                                }
 
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            
         
-    
-    }
-    else if(form=="form-4")
-    User.findByIdAndUpdate(req.session.userId, {description: req.body.descrizione}).exec();
-    
-    
-    else if(form=="form-5")
-    User.findByIdAndUpdate(req.session.userId, {$push: {skills: req.body.competenza}}).exec();
-    
-    else if(form=="form-6")
-    User.findByIdAndUpdate(req.session.userId, {$pull: {skills: req.body.delskill}}).exec();
-    
-    User.findById(req.session.userId)
-    .exec(function (error, user) {
-        if (error) {
-           // return next(error);
-        } 
-        else {
-            if (user === null) {
-                //return next(error);
+        }
+        else if(form=="form-4")
+        User.findByIdAndUpdate(req.session.userId, {description: req.body.descrizione}).exec();
+        
+        
+        else if(form=="form-5")
+        User.findByIdAndUpdate(req.session.userId, {$push: {skills: req.body.competenza}}).exec();
+        
+        else if(form=="form-6")
+        User.findByIdAndUpdate(req.session.userId, {$pull: {skills: req.body.delskill}}).exec();
+        
+        User.findById(req.session.userId)
+        .exec(function (error, user) {
+            if (error) {
+            // return next(error);
             } 
             else {
-                res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description }));
-                res.end();
+                if (user === null) {
+                    //return next(error);
+                } 
+                else {
+                    res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description, logged: logged}));
+                    res.end();
+                }
             }
-        }
-    });    
+        }); 
+    });   
 });
 
 router.get("/chiSiamo", function(req,res) {
@@ -245,23 +294,26 @@ router.get("/offro", function(req,res){
 
 router.post("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
-        if(!logged) return res.redirect("/login");
-        var postData = {
-            email: req.body.email,
-            subject: req.body.subject,
-            text: req.body.text,
-            location: {latitude: req.body.latitudine, longitude: req.body.longitudine}       
-        }
-        Corso.create(postData, function (error, user) {
-            if (error) {
-                return next(error);
+        User.findById(req.session.userId)
+        .exec(function (error, user) {
+            if(!logged) return res.redirect("/login");
+            var postData = {
+                userId: user._id,
+                subject: req.body.subject,
+                text: req.body.text,
+                location: {latitude: req.body.latitudine, longitude: req.body.longitudine}       
             }
-            else {
-                console.log("post creato!");
-                return res.redirect('/test/successfullyRegistered');
-            }
-        });   
-        //res.write(pug.renderFile("views/offro.pug"));
+            Corso.create(postData, function (error, user) {
+                if (error) {
+                    return console.log(error);
+                }
+                else {
+                    console.log("post creato!");
+                    return res.redirect('/successfullyCreatedPost');
+                }
+            });   
+            //res.write(pug.renderFile("views/offro.pug"));
+        });
     });
 });
 
@@ -291,7 +343,7 @@ router.post("/annuncio", function(req,res){
 		  var recensioni = [];
 		  
 		  
-		  User.findByEmail(user, function(error, em) {
+		  User.findById(user, function(error, em) {
 		  	if (error || !em) {
 				console.log("\nnessun risultato dalla query utenti");
 				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged : logged}));
@@ -311,10 +363,10 @@ router.post("/annuncio", function(req,res){
 								for(var i=0; i<media.length; i++) {
 									sum += media[i].vote;
 								}
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : sum/count, numero : media.length, logged:logged}));
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, utente : em, anntxt : anntxt, ritorna : ritorna, media : sum/count, numero : media.length, logged:logged}));
 							}
 						});
-					}
+                    }
 				});
 			}
 		  });
@@ -322,20 +374,34 @@ router.post("/annuncio", function(req,res){
 });
 
 router.post("/recensione", function(req,res){
-	var reviewData = {
-		reviewer: req.session.emailUser,
-        revised: req.body.utente,
-        vote: req.body.r,
-        text: req.body.text         
-    }
-	
-	Review.create(reviewData, function (error, user) {
-        if (error) {
-            return console.log(error);
-        } else {
-            console.log("recensione creata!");
-			res.redirect("/cerco");
+    isLoggedIn(req,res,function(logged){
+        if(!logged) return res.redirect("/login");    
+        var reviewData = {
+            reviewer: req.session.userId,
+            revised: req.body.utente,
+            vote: req.body.r,
+            text: req.body.text         
         }
+        
+        Review.create(reviewData, function (error, user) {
+            if (error) {
+                return console.log(error);
+            } else {
+                console.log("recensione creata!");
+                res.redirect("/cerco");
+            }
+        });
+    });
+});
+
+router.post("/addreview", function(req,res){
+    isLoggedIn(req,res,function(logged){
+        if(!logged) return res.redirect("/login");    
+        var utente = req.body.idUtente;
+        var anntxt = req.body.anntxt;
+        var ritorna = req.body.ritorna;
+        
+        res.write(pug.renderFile("views/add_recensione.pug", {utente: utente, ritorna : ritorna, anntxt : anntxt, logged: logged}));
     });
 });
 
@@ -349,7 +415,7 @@ router.post('/upload', function (req, res) {
             if(!b){
             if (bytesReceived > MAX_UPLOAD_SIZE) {
                 console.log('File troppo grande, massimo 5 MB');  
-                res.redirect("/test/account?error_size=true");
+                res.redirect("/account?error_size=true");
                 b=true;
                 //maxDimension = true;
                 //res.write(pug.renderFile("views/account.pug", {maxDimension : maxDimension}));
@@ -369,16 +435,34 @@ router.post('/upload', function (req, res) {
                         if (err) throw err;
                         //succesful = true;                
                         //res.write(pug.renderFile("views/account.pug", {succesful : succesful}));
-                        res.redirect("/test/account");                        
+                        res.redirect("/account");                        
                     });
             }
             else{
                 console.log("upload NOT succesful because of file extension not allowed!");
                 //res.write(pug.renderFile("views/account.pug", {extension : extension}));
-                res.redirect("/test/account?error_ext=true");                
+                res.redirect("/account?error_ext=true");                
             }
         }); 
-    }      	
+    }
+});
+
+router.get("/successfullyRegistered", function(req,res){
+    isLoggedIn(req,res,function(logged){
+        var text="Registrazione avvenuta con successo."
+        res.write(pug.renderFile("views/success.pug", {
+            text: text, logged: logged
+        }));
+    });
+});
+
+router.get("/successfullyCreatedPost", function(req,res){
+    isLoggedIn(req,res,function(logged){
+        var text="Post creato con successo."
+        res.write(pug.renderFile("views/success.pug", {
+            text: text, logged: logged
+        }));
+    });
 });
 
 router.use("/test", test);

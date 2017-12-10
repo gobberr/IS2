@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 // offerta ripetizioni
 var postSchema = new Schema({
   text: { type: String, required: true },
-  email: { type: String, required: true }, // per fare riferimento all'utente che ha creato il post
+  userId: { type: String, required: true }, // per fare riferimento all'utente che ha creato il post
   subject: { type: String, required: true },
   location: {
     description: String,
@@ -48,7 +48,7 @@ postSchema.statics.findPosts = function (subject, callback) {
 
 //funzione che trova tutti gli annunci di un utente
 postSchema.statics.findUserPosts = function (user, callback) {
-	Post.find({email : user}).exec(function (err, post) {
+	Post.find({userId : user}).exec(function (err, post) {
 		if (err) {
 			return callback(err);
 		} else if (!post) {
