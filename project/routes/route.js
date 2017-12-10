@@ -5,6 +5,7 @@ var test = require("./test");
 var User = require("../model/user");
 var Corso = require("../model/post");
 var Review = require("../model/review");
+var Message = require("../model/message");
 var path = require('path'); 
 var fs = require('fs');
 var formidable = require('formidable');
@@ -116,6 +117,34 @@ router.get('/logout', function (req, res, next) {
     }
 });
 
+router.post("/sendRequest", function(req,res){
+    isLoggedIn(req,res, function(logged) {        
+        if(!logged) return res.redirect("/login");
+        User.findById(req.session.userId).exec(function(error,user){
+            if(error)
+                console.log(error);
+            else{
+                var messageData = {
+                    contact: user.email,
+                    sender: user._id,
+                    reciver: req.body.reciverId,
+                    post: req.body.postId,
+                    recived: false
+                }
+                Message.create(messageData, function (error, message) {
+                    if (error) {
+                        return console.log(error);
+                    }
+                    else {
+                        console.log("Richiesta inviata");
+                        return res.redirect('/successfullyRequest');
+                    }
+                });
+            }
+        });
+    });
+});
+
 router.get("/registrati", function(req,res){
     isLoggedIn(req,res, function(logged) {        
         res.write(pug.renderFile("views/registration.pug", {logged: logged}));
@@ -169,25 +198,31 @@ router.get("/pubblico", function(req,res) {
 router.post("/pubblico", function(req,res) {
     isLoggedIn(req,res, function(logged) {
         var userpublic = req.body.userpublic;
-        var reviewpublic = req.body.reviewpublic;
+        var reviewpublic = [];
         //console.log(userpublic + ", " + reviewpublic);
-        
-        User.findByEmail(userpublic, function(error, user) {
+        User.findById(userpublic, function(error, user) {
             if(error || !user) {
                 console.log(error);
                 res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : reviewpublic, posts : [], logged: logged}));
             } else {
+                Review.findReviewOf(userpublic, function(error, rs) {
+					if (error || rs.length===0) {
+						console.log("\nnessun risultato dalla query recensioni");
+						res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : [], logged: logged}));
+					} else {
                 //console.log(user);
-                Corso.findUserPosts(user._id, function(error, post){
-                    if (error || !post) {
-                        console.log(error);
-                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : [], logged: logged}));
-                    } else {
-                        //console.log(post);
-                        console.log(user);
-                        console.log(reviewpublic);
-                        console.log(user.skills.length);
-                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : reviewpublic, posts : post, logged: logged}));
+                        Corso.findUserPosts(user._id, function(error, post){
+                            if (error || !post) {
+                                console.log(error);
+                                res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : rs, posts : [], logged: logged}));
+                            } else {
+                                //console.log(post);
+                                console.log(user);
+                                console.log(reviewpublic);
+                                console.log(user.skills.length);
+                                res.write(pug.renderFile("views/pubblico.pug", {utente : user, recensioni : rs, posts : post, logged: logged}));
+                            }
+                        });
                     }
                 });
             }
@@ -198,19 +233,29 @@ router.post("/pubblico", function(req,res) {
 router.get("/account", function(req,res,next){
     isLoggedIn(req,res, function(logged) {
         if(!logged) return res.redirect("/login");
-        User.findById(req.session.userId)
-        .exec(function (error, user) {
+        Message.findMessages(req.session.userId, function (error, messages) {
             if (error) {
-                return next(error);
-            } 
-            else {
-                if (user === null) {
-                    return next(error);
-                } 
-                else {
-                    res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description, pippo:req.query.error_size, pluto:req.query.error_ext, logged: logged}));
-                    res.end();
+                console.log(error);
+            } else {
+                var nNotifications=0;
+                for(var x=0; x<messages.length;x++){
+                    if (!messages[x].recived)
+                        nNotifications++;
                 }
+                User.findById(req.session.userId)
+                .exec(function (error, user) {
+                    if (error) {
+                        return next(error);
+                    } 
+                    else {
+                        if (user === null) {
+                            return next(error);
+                        } 
+                        else {
+                            res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description, pippo:req.query.error_size, pluto:req.query.error_ext, nNotifications: nNotifications, logged: logged}));
+                        }
+                    }
+                });
             }
         });
     });
@@ -219,60 +264,69 @@ router.get("/account", function(req,res,next){
 router.post("/account", function(req,res){
     isLoggedIn(req,res, function(logged) {
         if(!logged) return res.redirect("/login");
-        var form = req.body.formid;
-        
-        if(form=="form-1")
-        {
-            //var tel = req.body.telephone;
-            
-        User.findByIdAndUpdate(req.session.userId, {telephone: req.body.new_telephone}).exec();
-        }
-        else if(form=="form-2")
-        User.findByIdAndUpdate(req.session.userId, {email: req.body.email}).exec();
-        
-        else if(form=="form-3")
-        {
-        
-                User.findById(req.session.userId).exec(function(error,user){
-                    if(error)
-                        console.log();
-                    else{
-                        bcrypt.compare(req.body.old_password, user.password, function(err,response){
-                            if(response==true)
-                                if(req.body.new_password1==req.body.new_password2){
-                                    user.password=req.body.new_password1;
-                                    user.save();
-                                }
+        Message.findMessages(req.session.userId, function (error, messages) {
+            if (error) {
+                console.log(error);
+            } else {
+                var nNotifications=0;
+                for(var x=0; x<messages.length;x++){
+                    if (!messages[x].recived)
+                        nNotifications++;
+                }
+                var form = req.body.formid;
+                if(form=="form-1")
+                {
+                    //var tel = req.body.telephone;
+                    
+                User.findByIdAndUpdate(req.session.userId, {telephone: req.body.new_telephone}).exec();
+                }
+                else if(form=="form-2")
+                User.findByIdAndUpdate(req.session.userId, {email: req.body.email}).exec();
+                
+                else if(form=="form-3")
+                {
+                
+                        User.findById(req.session.userId).exec(function(error,user){
+                            if(error)
+                                console.log(error);
+                            else{
+                                bcrypt.compare(req.body.old_password, user.password, function(err,response){
+                                    if(response==true)
+                                        if(req.body.new_password1==req.body.new_password2){
+                                            user.password=req.body.new_password1;
+                                            user.save();
+                                        }
 
+                                });
+                            }
                         });
+                    
+                
+                }
+                else if(form=="form-4")
+                User.findByIdAndUpdate(req.session.userId, {description: req.body.descrizione}).exec();
+                
+                
+                else if(form=="form-5")
+                User.findByIdAndUpdate(req.session.userId, {$push: {skills: req.body.competenza}}).exec();
+                
+                else if(form=="form-6")
+                User.findByIdAndUpdate(req.session.userId, {$pull: {skills: req.body.delskill}}).exec();
+                
+                User.findById(req.session.userId)
+                .exec(function (error, user) {
+                    if (error) {
+                    // return next(error);
+                    } 
+                    else {
+                        if (user === null) {
+                            //return next(error);
+                        } 
+                        else {
+                            res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description, nNotifications: nNotifications, logged: logged}));
+                        }
                     }
                 });
-            
-        
-        }
-        else if(form=="form-4")
-        User.findByIdAndUpdate(req.session.userId, {description: req.body.descrizione}).exec();
-        
-        
-        else if(form=="form-5")
-        User.findByIdAndUpdate(req.session.userId, {$push: {skills: req.body.competenza}}).exec();
-        
-        else if(form=="form-6")
-        User.findByIdAndUpdate(req.session.userId, {$pull: {skills: req.body.delskill}}).exec();
-        
-        User.findById(req.session.userId)
-        .exec(function (error, user) {
-            if (error) {
-            // return next(error);
-            } 
-            else {
-                if (user === null) {
-                    //return next(error);
-                } 
-                else {
-                    res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, descrizione: user.description, logged: logged}));
-                    res.end();
-                }
             }
         }); 
     });   
@@ -301,7 +355,8 @@ router.post("/offro", function(req,res){
                 userId: user._id,
                 subject: req.body.subject,
                 text: req.body.text,
-                location: {latitude: req.body.latitudine, longitude: req.body.longitudine}       
+                location: {latitude: req.body.latitudine, longitude: req.body.longitudine},
+                deleted: false    
             }
             Corso.create(postData, function (error, user) {
                 if (error) {
@@ -338,7 +393,8 @@ router.get("/annuncio", function(req,res){
 router.post("/annuncio", function(req,res){
       isLoggedIn(req,res,function(logged){
 		  var user = req.body.utente;
-		  var anntxt = req.body.anntxt;
+          var anntxt = req.body.anntxt;
+          var postId = req.body.postId;
 		  var ritorna = req.body.ritorna;
 		  var recensioni = [];
 		  
@@ -346,24 +402,24 @@ router.post("/annuncio", function(req,res){
 		  User.findById(user, function(error, em) {
 		  	if (error || !em) {
 				console.log("\nnessun risultato dalla query utenti");
-				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged : logged}));
+				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : new User, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, logged : logged}));
 		  	} else {
 				Review.findReviewOf(user, function(error, rs) {
 					if (error || rs.length===0) {
 						console.log("\nnessun risultato dalla query recensioni");
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
 					} else {
 						Review.avg(user, function(error, media) {
 							if (error) {
 								console.log(error);
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, utente : em, anntxt : anntxt, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
 							} else {
 								var sum = 0;
 								var count = media.length;
 								for(var i=0; i<media.length; i++) {
 									sum += media[i].vote;
 								}
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, utente : em, anntxt : anntxt, ritorna : ritorna, media : sum/count, numero : media.length, logged:logged}));
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : sum/count, numero : media.length, logged:logged}));
 							}
 						});
                     }
@@ -454,9 +510,20 @@ router.post('/upload', function (req, res) {
     }
 });
 
+
+
 router.get("/successfullyRegistered", function(req,res){
     isLoggedIn(req,res,function(logged){
         var text="Registrazione avvenuta con successo."
+        res.write(pug.renderFile("views/success.pug", {
+            text: text, logged: logged
+        }));
+    });
+});
+
+router.get("/successfullyRequest", function(req,res){
+    isLoggedIn(req,res,function(logged){
+        var text="Richiesta ripetizioni avvenuta con successo."
         res.write(pug.renderFile("views/success.pug", {
             text: text, logged: logged
         }));
@@ -469,6 +536,43 @@ router.get("/successfullyCreatedPost", function(req,res){
         res.write(pug.renderFile("views/success.pug", {
             text: text, logged: logged
         }));
+    });
+});
+
+router.get("/messages", function(req,res){
+    isLoggedIn(req,res,function(logged){
+        if(!logged) return res.redirect("/login");
+        Message.findMessages(req.session.userId, function (error, messages) {
+            if (error || messages.length===0) {
+                console.log("nessun risultato dalla query");
+                res.write(pug.renderFile("views/notifications.pug", {messages: [], logged: logged}));
+            } else {
+                res.write(pug.renderFile("views/notifications.pug", {messages: messages, logged: logged}));
+            }
+        });
+    });
+});
+
+router.post("/messages", function(req,res){
+    isLoggedIn(req,res,function(logged){
+        if(!logged) return res.redirect("/login");
+        Message.findMessages(req.session.userId, function (error, messages) {
+            if (error || messages.length===0) {
+                console.log("nessun risultato dalla query");
+                res.write(pug.renderFile("views/notifications.pug", {messages: [], logged: logged}));
+            } else {
+                res.write(pug.renderFile("views/notifications.pug", {messages: messages, logged: logged}));
+            }
+        });
+    });
+});
+
+router.post("/setMessagesReaded", function(req,res){
+    isLoggedIn(req,res,function(logged){
+        if(!logged) return res.redirect("/login");
+        Message.update({}, {recived: true}, {multi: true}, function(err) { 
+            res.redirect('/messages');
+        });
     });
 });
 

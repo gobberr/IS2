@@ -12,6 +12,7 @@ var postSchema = new Schema({
     latitude: String,
     longitude: String,
   },
+  deleted: Boolean,
 });
 
 //funzione che trova un annuncio in base alla materia, se specificata

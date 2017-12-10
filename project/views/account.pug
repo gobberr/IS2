@@ -19,13 +19,20 @@ if pluto
     .row
       .col-md-6
         h1 Gestione account
-      |     
+        
+      |  
 .py-5
   .container
     .row
       .col-md-6
         .row
           .col-md-12
+            form(method='post', action='/messages')
+              .form-group
+                |
+                label Hai #{nNotifications} richieste di ripetizioni ancora da visualizzare.
+                br                     
+                button.btn.btn-primary.my-1(type='submit') Visualizza Richieste
             form(method='post', action='#')
               .form-group
                 label Modifica numero di telefono

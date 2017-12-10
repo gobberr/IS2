@@ -73,29 +73,31 @@ include includes/jumbotron-light.pug
           .col-md-8
             h1 Risultati trovati:
             each val in values
-              .py-3
-                .container
-                  .row
-                    .col-md-12
-                      .card
-                        form(method='POST', action='/annuncio')
-                          .form-group
-                            .card-header 
-                              input.form-control(type='hidden' value=val.userId name='utente')
-                              |
-                              input.form-control(type='hidden' value=val.text name='anntxt')
-                              |
-                              input.form-control(type='hidden' value=val.subject name='ritorna')
-                              |
-                              button.btn.btn-primary(type='submit') Annuncio n_#{val._id}
-                              
-                            |                     
-                            .card-body
-                              h4 #{val.subject}
-                              |
-                              h6 Utente: #{val.email}
-                              |                         
-                              p.p-y-1 #{val.text}
+              if (!val.deleted)
+                .py-3
+                  .container
+                    .row
+                      .col-md-12
+                        .card
+                          form(method='POST', action='/annuncio')
+                            .form-group
+                              .card-header 
+                                input.form-control(type='hidden' value=val.userId name='utente')
+                                |
+                                input.form-control(type='hidden' value=val.text name='anntxt')
+                                input.form-control(type='hidden' value=val._id name='postId')
+                                |
+                                input.form-control(type='hidden' value=val.subject name='ritorna')
+                                |
+                                button.btn.btn-primary(type='submit') Annuncio n_#{val._id}
+                                
+                              |                     
+                              .card-body
+                                h4 #{val.subject}
+                                |
+                                h6 Utente: #{val.userId}
+                                |                         
+                                p.p-y-1 #{val.text}
           |                         
           .col-md-6
             .btn-group

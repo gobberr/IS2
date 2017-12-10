@@ -20,9 +20,8 @@ include includes/navbar.pug
             h2 " #{anntxt} "
           | 
           .col-md-6
-            form(method='POST', action='/ritorna')
+            form(method='get', action='/cerco')
               .form-group
-                input.form-control(type='hidden' value=ritorna name='subject')
                 |
                 button.btn.btn-primary(type='submit') Ritorna agli annunci
 
@@ -42,6 +41,7 @@ include includes/navbar.pug
             input.form-control(type='hidden' value=utente._id name='idUtente')
             |
             button.btn.btn-primary(type='submit') Aggiungi recensione
+include includes/footer.pug
 |     
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 |     

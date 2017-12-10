@@ -62,26 +62,27 @@ include includes/header.pug
           h5 Questo utente non ha ancora offerto nessuna ripetizione!
         else
           each ps in posts
-            .py-1
-              .container
-                .row
-                  .card
-                    form(method='POST', action='/annuncio')
-                      .form-group
-                        .card-header 
-                          input.form-control(type='hidden' value=ps.email name='utente')
-                          |
-                          input.form-control(type='hidden' value=ps.text name='anntxt')
-                          |
-                          input.form-control(type='hidden' value=ps.subject name='ritorna')
-                          |
-                          button.btn.btn-primary(type='submit') Annuncio n_#{ps._id}
-                              
-                        |                     
-                        .card-body
-                          h4 #{ps.subject}
-                          |                         
-                          p.p-y-1 #{ps.text}
+            if (!ps.deleted)
+              .py-1
+                .container
+                  .row
+                    .card
+                      form(method='POST', action='/annuncio')
+                        .form-group
+                          .card-header 
+                            input.form-control(type='hidden' value=ps.userId name='utente')
+                            |
+                            input.form-control(type='hidden' value=ps.text name='anntxt')
+                            |
+                            input.form-control(type='hidden' value=ps.subject name='ritorna')
+                            |
+                            button.btn.btn-primary(type='submit') Annuncio n_#{ps._id}
+                                
+                          |                     
+                          .card-body
+                            h4 #{ps.subject}
+                            |                         
+                            p.p-y-1 #{ps.text}
 
 | 
 .py-3
@@ -99,6 +100,7 @@ include includes/header.pug
             input.form-control(type='hidden' value=utente.email name='utente')
             | 
             button.btn.btn-primary(type='submit') Aggiungi recensione
+include includes/footer.pug
 |     
 script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
 |     
