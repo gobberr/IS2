@@ -198,7 +198,7 @@ router.get("/pubblico", function(req,res) {
 router.post("/pubblico", function(req,res) {
     isLoggedIn(req,res, function(logged) {
         var userpublic = req.body.userpublic;
-        //console.log(userpublic + ", " + reviewpublic);
+        
         User.findById(userpublic, function(error, user) {
             if(error || !user) {
                 console.log(error);
@@ -209,6 +209,7 @@ router.post("/pubblico", function(req,res) {
                     imageDir=user._id+".jpeg";
                 }
                 Review.findReviewOf(userpublic, function(error, rs) {
+                    
 					if (error || rs.length===0) {
 						Corso.findUserPosts(user._id, function(error, post){
                             if (error || !post) {
@@ -217,7 +218,9 @@ router.post("/pubblico", function(req,res) {
                             } else {
                                 //console.log(post);
                                 res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : "", posts : post, media : 0, numero : 0, logged: logged}));
+                                //res.end();
                             }
+                            
                         });
 					} else {
                         Review.avg(user, function(error, media) {
@@ -431,14 +434,16 @@ router.post("/annuncio", function(req,res){
 		  var user = req.body.utente;
           var anntxt = req.body.anntxt;
           var postId = req.body.postId;
-		  var ritorna = req.body.ritorna;
+          var ritorna = req.body.ritorna;
+          var latitude = req.body.latitude;
+          var longitude = req.body.longitude;
 		  var recensioni = [];
 		  
 		  
 		  User.findById(user, function(error, em) {
 		  	if (error || !em) {
 				console.log("\nnessun risultato dalla query utenti");
-				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: "", utente : new User, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, logged : logged}));
+				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: "", utente : new User, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged : logged}));
 		  	} else {
                 var imageDir="default.png";
                 if (fs.existsSync(__dirname + '/../public/upload/' + em._id + ".jpeg")) {
@@ -447,19 +452,20 @@ router.post("/annuncio", function(req,res){
 				Review.findReviewOf(user, function(error, rs) {
 					if (error || rs.length===0) {
 						console.log("\nnessun risultato dalla query recensioni");
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
-					} else {
+						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged:logged}));
+                        res.end();
+                    } else {
 						Review.avg(user, function(error, media) {
 							if (error) {
 								console.log(error);
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, logged:logged}));
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged:logged}));
 							} else {
 								var sum = 0;
 								var count = media.length;
 								for(var i=0; i<media.length; i++) {
 									sum += media[i].vote;
 								}
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : sum/count, numero : media.length, logged:logged}));
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : sum/count, numero : media.length, latitude: latitude, longitude: longitude, logged:logged}));
 							}
 						});
                     }

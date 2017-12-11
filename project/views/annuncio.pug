@@ -16,16 +16,33 @@ include includes/navbar.pug
       .col-md-12
         .row
           .col-md-6
+            
             h1 Dettagli Annuncio:
-            h2 " #{anntxt} "
-          | 
+            br
+            h3 Testo Annuncio:
+            .col-md-12.border.border-primary.rounded(style="min-height:200px")
+              h6.m-2 #{anntxt}
+          |
           .col-md-6
-            form(method='get', action='/cerco')
-              .form-group
-                |
-                button.btn.btn-primary(type='submit') Ritorna agli annunci
+            .float-right
+              |  
+              img.mt-4(src=imageDir, alt="avatar", width="150", height="150")
+              
+              form(method='post', action='/pubblico')
+                .form-group
+                  br
+                  input.form-control(type="hidden", value=utente._id, name="userpublic")
+                  | 
+                  input.form-control(type="hidden", value=recensioni, name="reviewpublic")
+                  | 
+                  button.btn.btn-primary(type="submit") #{utente.name} #{utente.surname}
+              |
+              p.h5 Competenze utente:
+                each val in utente.skills
+                  h6 @ #{val}
+         
 
-          include sezione_annuncio.pug
+      include sezione_annuncio.pug
 |     
 .py-3
   .container

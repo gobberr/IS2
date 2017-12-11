@@ -1,44 +1,17 @@
 
 style.
   #map {
-    height: 200px;
+    height: 300px;
     width: 100%;
     margin: 0 auto;
   }
 
-.py-3
-  .container
-    .row
-      .col-md-12
-        .row
-          .col-md-6
-            form(method='post', action='/pubblico')
-              .form-group
-                input.form-control(type="hidden", value=utente._id, name="userpublic")
-                | 
-                input.form-control(type="hidden", value=recensioni, name="reviewpublic")
-                | 
-                button.btn.btn-primary(type="submit") #{utente.name} #{utente.surname}
-            |  
-            img(src=imageDir, alt="avatar", width="150", height="150")
-            |
-            p.h4 Informazioni utente: 
-            |
-            br
-            |
-            p.h5 Email contatto:
-            |
-            p.h6 #{utente.email}
-            |
-            br
-            |
-            p.h5 Competenze
-              each val in utente.skills
-                h6 @ #{val}
-          |                     
+.col-md-12
+        .row                  
           .col-md-6
             form(method='POST', action='/')
               .form-group
+                br
                 p.lead Posizione annuncio:
                 |
                 #map
@@ -48,7 +21,11 @@ style.
                   |
                   if (logged)                              
                     .col-md-4
+                      br
                       button.btn.btn-primary(type="button" data-toggle="modal" data-target="#exampleModal") Contatta l&apos;utente
+          |
+          
+          |   
 
 .modal(id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
   .modal-dialog(role="document")
@@ -72,7 +49,9 @@ style.
 
 script.
   // NB la variabile pos andrà inizializzata con la posizione dell'annuncio
-  var map, pos = {lat: 46.066667, lng: 11.133333};
+  latitude=#{latitude};
+  longitude=#{longitude};
+  var map, pos = {lat: latitude, lng: longitude};
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: pos,
