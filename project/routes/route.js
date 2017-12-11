@@ -10,6 +10,7 @@ var path = require('path');
 var fs = require('fs');
 var formidable = require('formidable');
 var geolib = require('geolib');
+var api = require("./api");
 
 //var bodyparser = require('body-parser');
 
@@ -635,6 +636,8 @@ router.post("/setMessagesReaded", function(req,res){
         });
     });
 });
+
+router.use("/api", api);
 
 router.use("/test", test);
 
