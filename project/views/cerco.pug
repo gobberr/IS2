@@ -30,7 +30,9 @@ include includes/jumbotron-light.pug
             label(for="subject") Seleziona la materia
             |                             
             //input.form-control(type='text', name='subject', placeholder='Es: Analisi Matematica 1')
-            include sezione_materie.pug
+            select.form-control(id="subject" name="subject")
+              option  Tutte           
+              include sezione_materie.pug
           |                         
           .form-group
             label In che zona?
