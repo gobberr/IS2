@@ -247,10 +247,10 @@ router.post("/pubblico", function(req,res) {
                                 Corso.findUserPosts(user._id, function(error, post){
                                     if (error || !post) {
                                         console.log(error);
-                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : sum/count, numero : media.length, logged: logged}));
+                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : Math.round((sum/count) * 100) / 100, numero : media.length, logged: logged}));
                                     } else {
                                         //console.log(post);
-                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : post, media : sum/count, numero : media.length, logged: logged}));
+                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : post, media : Math.round((sum/count) * 100) / 100, numero : media.length, logged: logged}));
                                     }
                                 });
 							}
@@ -468,7 +468,7 @@ router.post("/annuncio", function(req,res){
 								for(var i=0; i<media.length; i++) {
 									sum += media[i].vote;
 								}
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : sum/count, numero : media.length, latitude: latitude, longitude: longitude, logged:logged}));
+								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : Math.round((sum/count) * 100) / 100, numero : media.length, latitude: latitude, longitude: longitude, logged:logged}));
 							}
 						});
                     }
