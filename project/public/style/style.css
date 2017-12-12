@@ -334,7 +334,7 @@
   border: 1px solid transparent;
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
-  line-height: 1.25;
+  line-height: 1.5;
   border-radius: 0.25rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
   .btn:focus, .btn:hover {
@@ -1293,9 +1293,9 @@ pre {
 .form-control {
   display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.75rem;
   font-size: 1rem;
-  line-height: 1.25;
+  line-height: 1.5;
   color: #495057;
   background-color: #fff;
   background-image: none;
@@ -1354,7 +1354,7 @@ select.form-control:focus::-ms-value {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   margin-bottom: 0;
-  line-height: 1.25;
+  line-height: 1.5;
   border: solid transparent;
   border-width: 1px 0; }
   .form-control-plaintext.form-control-sm, .input-group-sm > .form-control-plaintext.form-control,
@@ -2055,7 +2055,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
   margin-bottom: 0;
   font-size: 1rem;
   font-weight: normal;
-  line-height: 1.25;
+  line-height: 1.5;
   color: #495057;
   text-align: center;
   background-color: #e9ecef;
@@ -2803,7 +2803,7 @@ button.list-group-item-dark {
   display: block;
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
-  line-height: 1.25;
+  line-height: 1.5;
   color: #007bff;
   background-color: #fff;
   border: 1px solid #ddd; }

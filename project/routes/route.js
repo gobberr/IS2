@@ -35,6 +35,7 @@ router.get("/cerco", function(req,res){
             } else {
                 res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
             }
+            res.end();
         });
     });
 });
@@ -393,6 +394,7 @@ router.post("/offro", function(req,res){
             if(!logged) return res.redirect("/login");
             var postData = {
                 userId: user._id,
+                userName: user.name+" "+user.surname,
                 subject: req.body.subject,
                 text: req.body.text,
                 location: {latitude: req.body.latitudine, longitude: req.body.longitudine},
@@ -478,14 +480,15 @@ router.post("/annuncio", function(req,res){
 
 router.post("/recensione", function(req,res){
     isLoggedIn(req,res,function(logged){
-        if(!logged) return res.redirect("/login");    
+        if(!logged) return res.redirect("/login");
+        var user=JSON.parse(req.body.utente);
         var reviewData = {
             reviewer: req.session.userId,
-            revised: req.body.utente,
+            revised: user._id,
+            userName: user.name+" "+user.surname,
             vote: req.body.r,
             text: req.body.text         
         }
-        
         Review.create(reviewData, function (error, user) {
             if (error) {
                 return console.log(error);
@@ -500,11 +503,9 @@ router.post("/recensione", function(req,res){
 router.post("/addreview", function(req,res){
     isLoggedIn(req,res,function(logged){
         if(!logged) return res.redirect("/login");    
-        var utente = req.body.idUtente;
-        var anntxt = req.body.anntxt;
-        var ritorna = req.body.ritorna;
+        var utente = req.body.utente;
         
-        res.write(pug.renderFile("views/add_recensione.pug", {utente: utente, ritorna : ritorna, anntxt : anntxt, logged: logged}));
+        res.write(pug.renderFile("views/add_recensione.pug", {utente: utente, logged: logged}));
     });
 });
 

@@ -91,7 +91,7 @@ include includes/header.pug
         .col-md-6
           form(method='POST', action='/addreview')
             .form-group
-              input.form-control(type='hidden' value=utente.email name='utente')
+              input.form-control(type='hidden' value=utente name='utente')
               | 
               button.btn.btn-primary(type='submit') Aggiungi recensione
 include includes/footer.pug

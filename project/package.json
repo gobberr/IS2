@@ -1,0 +1,40 @@
+{
+  "name": "ripetizioni_unitn",
+  "version": "1.0.0",
+  "description": "is2 project 2017",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "formidable": "^1.1.1",
+    "geolib": "^2.0.24",
+    "mongoose": "^4.13.7",
+    "pug": "^2.0.0-rc.4"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gobberr/IS2.git"
+  },
+  "keywords": [
+    "is2",
+    "ripetizioni",
+    "unitn"
+  ],
+  "author": "bomboclat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gobberr/IS2/issues"
+  },
+  "homepage": "https://github.com/gobberr/IS2#readme"
+}

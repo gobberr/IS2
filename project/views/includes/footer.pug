@@ -15,19 +15,20 @@
         h2.mb-4.text-light Mapsite
         |                     
         ul.list-unstyled
-          a.text-white(href='#') Home
+          a.text-white(href='/') Home
           |                         
           br
           |                         
-          a.text-white(href='#') About us
+          a.text-white(href='/chiSiamo') About us
           |                         
           br
           |                         
-          a.text-white(href='#') Our services
+          a.text-white(href='/cerco') Search
           |                         
           br
-          |                         
-          a.text-white(href='#') Stories
+          |
+          if (logged)
+            a.text-white(href='/offro') Offer
     |             
     .row
       .col-md-12.mt-3

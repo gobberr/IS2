@@ -29,6 +29,7 @@ include includes/navbar.pug
               if (!message.recived)
                 if (!toRead)
                   br
+                  br
                   h3 Messaggi non letti:
                   - toRead = true;
                 .py-3
@@ -37,7 +38,8 @@ include includes/navbar.pug
                       .col-md-12
                         .card               
                           .card-body
-                            h5 Notifica relativa all'annuncio #{message.post} effettuata da #{message.sender} nNot=#{nNotifications}
+                            
+                            h5 Sei stato contattato da un utente interessato al tuo annuncio
                             |                         
                             p.p-y-1 Puoi ricontattarlo al seguente indirizzo: #{message.contact}
                 if (nNotifications==1)
@@ -49,6 +51,8 @@ include includes/navbar.pug
                   - nNotifications--;
               else
                 if (!readed)
+                  br
+                  br
                   h3 Messaggi già letti:
                   - readed = true;
                 .py-3
@@ -57,7 +61,7 @@ include includes/navbar.pug
                       .col-md-12
                         .card               
                           .card-body
-                            h5 Notifica relativa all'annuncio #{message.post} effettuata da #{message.sender}
+                            h5 Sei stato contattato da un utente interessato al tuo annuncio
                             |                         
                             p.p-y-1 Puoi ricontattarlo al seguente indirizzo #{message.contact}
             if (!readed && !toRead)

@@ -56,7 +56,7 @@ include includes/navbar.pug
         .col-md-6
           form(method='POST', action='/addreview')
             .form-group
-              input.form-control(type='hidden' value=utente._id name='idUtente')
+              input.form-control(type='hidden' value=utente name='utente')
               |
               button.btn.btn-primary(type='submit') Aggiungi recensione
 include includes/footer.pug

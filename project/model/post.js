@@ -7,6 +7,7 @@ var postSchema = new Schema({
   text: { type: String, required: true },
   userId: { type: String, required: true }, // per fare riferimento all'utente che ha creato il post
   subject: { type: String, required: true },
+  userName: String,
   location: {
     description: String,
     latitude: String,

@@ -27,9 +27,10 @@ include includes/jumbotron-light.pug
         form(method='POST', action='/cerco', id='form', name='form')
 
           .form-group
-            label Che corso cerchi?
+            label(for="subject") Seleziona la materia
             |                             
-            input.form-control(type='text', name='subject', placeholder='Es: Analisi Matematica 1')
+            //input.form-control(type='text', name='subject', placeholder='Es: Analisi Matematica 1')
+            include sezione_materie.pug
           |                         
           .form-group
             label In che zona?
@@ -71,14 +72,18 @@ include includes/jumbotron-light.pug
       .col-md-12
         .row
           .col-md-8
-            h1 Risultati trovati:
+            - var i=1;
             each val in values
+              if (i==1)
+                h1 Risultati trovati:
+                - bool=false;
               if (!val.deleted)
                 .py-3
                   .container
                     .row
                       .col-md-12
                         .card
+                          
                           form(method='POST', action='/annuncio')
                             .form-group
                               .card-header 
@@ -91,26 +96,15 @@ include includes/jumbotron-light.pug
                                 |
                                 input.form-control(type='hidden' value=val.subject name='ritorna')
                                 |
-                                button.btn.btn-primary(type='submit') Annuncio n_#{val._id}
-                                
+                                button.btn.btn-primary(type='submit') Annuncio #{i}
+                                - i++;
                               |                     
                               .card-body
                                 h4 #{val.subject}
                                 |
-                                h6 Utente: #{val.userId}
+                                h6 Utente: #{val.userName}
                                 |                         
                                 p.p-y-1 #{val.text}
-          |                         
-          .col-md-6
-            .btn-group
-              button.btn.btn-primary.dropdown-toggle(data-toggle='dropdown')  Filtri
-              |                                 
-              .dropdown-menu
-                a.dropdown-item(href='#') Action
-                |                                     
-                .dropdown-divider
-                |                                     
-                a.dropdown-item(href='#') Separated link
     |             
     .row
       .col-md-12
