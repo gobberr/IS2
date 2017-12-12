@@ -24,7 +24,8 @@ include includes/jumbotron-light.pug
           |                                 
           .form-group
             label(for="subject") Per che corso?
-            include sezione_materie.pug
+            select.form-control(id="subject" name="subject")
+              include sezione_materie.pug
             //label Per che corso?
             |                                     
             //input.form-control(type='text', placeholder='Inserisci la materia', name="subject" required)

@@ -51,6 +51,7 @@ router.post("/cerco", function(req,res){
         var lng = req.body.longitudine;
         
         var subject = req.body.subject;
+        if (subject=="Tutte") subject="";
         var maxDistance=req.body.distance;
         
         Corso.findPosts(subject, function (error, post) {
