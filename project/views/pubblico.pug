@@ -8,7 +8,7 @@ head
   |     
   link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
 
-include includes/header.pug
+include includes/navbar.pug
 
 .py-3
   .container
@@ -25,7 +25,7 @@ include includes/header.pug
                       | 
                       br
                       br
-                      .col-md-7
+                  .col-md-7
                         br
                         | 
                         img(src=imageDir, alt="avatar", width="150", height="150")
@@ -33,14 +33,17 @@ include includes/header.pug
                         br
                         br
                         h3 Descrizione utente:
+                        br
                         h6 " #{utente.description} "
-                      .col-md-5
+                  .col-md-5
                         br
                         | 
-                        p.h5 Competenze:
+                        
                         if (utente.skills != undefined || utente.skills.length===0)
+                          h5 Competenze:                        
+                            
                           each val in utente.skills
-                            h6 @ #{val}
+                              p.ml-2  &bull; #{val}
                         else
                           h6 Nessuna competenza verificata...
 | 
@@ -53,6 +56,7 @@ include includes/header.pug
         if (posts.length===0)
           h5 Questo utente non ha ancora offerto nessuna ripetizione!
         else
+          - var i=1;
           each ps in posts
             if (!ps.deleted)
               .py-1
@@ -70,7 +74,8 @@ include includes/header.pug
                             |
                             input.form-control(type='hidden' value=ps.location.latitude name='latitude')
                             input.form-control(type='hidden' value=ps.location.longitude name='longitude')
-                            button.btn.btn-primary(type='submit') Annuncio n_#{ps._id}
+                            button.btn.btn-primary(type='submit') Annuncio #{i}
+                            - i++;
                                 
                           |                     
                           .card-body

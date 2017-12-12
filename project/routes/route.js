@@ -203,7 +203,7 @@ router.post("/pubblico", function(req,res) {
         
         User.findById(userpublic, function(error, user) {
             if(error || !user) {
-                console.log(error);
+                //console.log(error);
                 res.write(pug.renderFile("views/pubblico.pug", {utente : new User, imageDir: "", recensioni : "", posts : [], media : 0, numero : 0, logged: logged}));
             } else {
                 var imageDir="default.png";
@@ -215,7 +215,7 @@ router.post("/pubblico", function(req,res) {
 					if (error || rs.length===0) {
 						Corso.findUserPosts(user._id, function(error, post){
                             if (error || !post) {
-                                console.log(error);
+                                //console.log(error);
                                 res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : "", posts : [], media : 0, numero : 0, logged: logged}));
                             } else {
                                 //console.log(post);
@@ -225,12 +225,12 @@ router.post("/pubblico", function(req,res) {
                             
                         });
 					} else {
-                        Review.avg(user, function(error, media) {
+                        Review.avg(user._id, function(error, media) {
 							if (error) {
                                 console.log(error);
                                 Corso.findUserPosts(user._id, function(error, post){
                                     if (error || !post) {
-                                        console.log(error);
+                                        //console.log(error);
                                         res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : 0, numero : 0, logged: logged}));
                                     } else {
                                         //console.log(post);
@@ -246,7 +246,7 @@ router.post("/pubblico", function(req,res) {
                                 }
                                 Corso.findUserPosts(user._id, function(error, post){
                                     if (error || !post) {
-                                        console.log(error);
+                                        //console.log(error);
                                         res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : Math.round((sum/count) * 100) / 100, numero : media.length, logged: logged}));
                                     } else {
                                         //console.log(post);
@@ -456,7 +456,6 @@ router.post("/annuncio", function(req,res){
 					if (error || rs.length===0) {
 						console.log("\nnessun risultato dalla query recensioni");
 						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged:logged}));
-                        res.end();
                     } else {
 						Review.avg(user, function(error, media) {
 							if (error) {
@@ -482,20 +481,22 @@ router.post("/recensione", function(req,res){
     isLoggedIn(req,res,function(logged){
         if(!logged) return res.redirect("/login");
         var user=JSON.parse(req.body.utente);
-        var reviewData = {
-            reviewer: req.session.userId,
-            revised: user._id,
-            userName: user.name+" "+user.surname,
-            vote: req.body.r,
-            text: req.body.text         
-        }
-        Review.create(reviewData, function (error, user) {
-            if (error) {
-                return console.log(error);
-            } else {
-                console.log("recensione creata!");
-                res.redirect("/cerco");
+        User.findById(req.session.userId, function(error, em) {
+            var reviewData = {
+                reviewer: req.session.userId,
+                revised: user._id,
+                userName: em.name+" "+em.surname,
+                vote: req.body.r,
+                text: req.body.text         
             }
+            Review.create(reviewData, function (error, user) {
+                if (error) {
+                    return console.log(error);
+                } else {
+                    console.log("recensione creata!");
+                    res.redirect("/cerco");
+                }
+            });
         });
     });
 });

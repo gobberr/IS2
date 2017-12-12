@@ -26,8 +26,8 @@ reviewSchema.statics.findReviewOf = function (id, callback) {
 	});
 }
 
-reviewSchema.statics.avg = function(email, callback){
-	Review.find({revised : email}, 'vote').exec(function (err, votes) {
+reviewSchema.statics.avg = function(id, callback){
+	Review.find({revised : id}, 'vote').exec(function (err, votes) {
       if (err) {
 		//console.log("\nerrore");
 		return callback(err);
