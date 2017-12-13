@@ -1,0 +1,67 @@
+
+style.
+  #map {
+    height: 300px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+.col-md-12
+        .row                  
+          .col-md-6
+            form(method='POST', action='/')
+              .form-group
+                br
+                p.lead Posizione annuncio:
+                |
+                #map
+                |                                 
+                .row
+                  .col-md-4
+                  |
+                  if (logged)                              
+                    .col-md-4
+                      br
+                      button.btn.btn-primary(type="button" data-toggle="modal" data-target="#exampleModal") Contatta l&apos;utente
+          |
+          
+          |   
+
+.modal(id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
+  .modal-dialog(role="document")
+    .modal-content
+      form(method='post', action='/sendRequest')
+        .form-group
+          .modal-header
+            h5.modal-title(id="exampleModalLabel") Invia Richiesta
+            button.close(type="button" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            .form-group
+            p Inviando una richiesta di ricevere ripetizioni, fornirai la tua email universitaria per essere ricontattato.
+            p Premi "Invia!" per inviare la richiesta, sarai ricontattato il prima possibile!
+            input.form-control(type="hidden", value=utente._id, name="reciverId")
+            input.form-control(type="hidden", value=postId, name="postId")
+            |                                     
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-dismiss="modal") Annulla
+            button.btn.btn-primary(type="submit") Invia!
+
+script.
+  // NB la variabile pos andrà inizializzata con la posizione dell'annuncio
+  latitude=#{latitude};
+  longitude=#{longitude};
+  var map, pos = {lat: latitude, lng: longitude};
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: pos,
+      zoom: 15
+    });
+    var marker = new google.maps.Marker({
+          position: pos,
+          map: map
+        });
+  }
+  // NB su style - #map andrà modificata la dimensione appena la pagina sarà in funzione
+
+script(async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAyPuNc-IQgslbVyEdvq8kCrJvOQSS4Prs&callback=initMap')

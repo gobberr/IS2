@@ -1,0 +1,35 @@
+style.
+  .form-control {
+      line-height: 1.5;
+      padding: 0.4rem 0.75rem
+  }
+
+nav.navbar.navbar-expand-md.bg-secondary.navbar-dark
+  .container
+    a.navbar-brand.bg-secondary.d-print-none(href='/') Home
+    |             
+    button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    |             
+    #navbarSupportedContent.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto
+        li.nav-item
+          a.nav-link.active.mr-2(href='/cerco') Cerco ripetizioni
+        |                     
+        li.nav-item
+          if logged
+            a.nav-link.active.mr-2(href='/offro') Offro ripetizioni
+          else
+            a.nav-link.active.mr-2(href='/login') Offro ripetizioni
+        |                     
+        li.nav-item
+          a.nav-link.active(href='/chiSiamo') Chi siamo
+      |
+      //- var logged=true;
+      if logged 
+          a.btn.btn-primary.mr-2.mt-2.mb-2(href='/account') Il mio account
+          a.btn.btn-primary(href='logout') Logout
+      else 
+          a.btn.btn-primary.mr-2.mt-2.mb-2(href='/login') Accedi
+          a.btn.btn-primary(href='/registrati') Registrati
+          |

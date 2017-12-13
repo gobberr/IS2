@@ -1,0 +1,48 @@
+doctype html
+
+head
+  meta(charset='utf-8')
+  |     
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  |     
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', type='text/css')
+  |     
+  link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
+include includes/navbar.pug
+include includes/jumbotron-light.pug
+
+.py-5
+  .container
+    .row
+      .col-md-12
+        //-var error=true
+        if error
+          div.alert.alert-danger Le credenziali inserite non sono corrette!
+        |
+        .card.text-white.bg-primary.p-1.text-left
+          .card-body.rounded-bottom
+            h1.mb-4 Accesso al servizio
+            |                             
+            form(action='/login', method="POST")
+              .form-group
+                label Email #{error}
+                |                                     
+                .row.mb-2
+                  .col-9
+                    input.form-control(type='email', placeholder='La Tua Email Universitaria' name='email' required)
+                  |                                         
+                label Password
+                |                                     
+                .row
+                  .col-9
+                    input.form-control(type='password', placeholder='La Tua Password' name='password' required)
+              |                                 
+              button.btn.btn-secondary(type='submit') Accedi!
+|
+include includes/footer.pug
+
+script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
+|     
+script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js', integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4', crossorigin='anonymous')
+|     
+script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js', integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1', crossorigin='anonymous')

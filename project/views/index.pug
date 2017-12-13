@@ -1,0 +1,76 @@
+doctype html
+
+head
+  style.
+    #map {
+        height: 200px;
+        width: 100%;
+        margin: 0 auto;
+    }
+    
+  meta(charset='utf-8')
+  |     
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  |     
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', type='text/css')
+  |     
+  link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
+
+include includes/navbar.pug
+|
+.py-5.text-center.opaque-overlay.bg-primary(style='background-image: url("");')
+  .container.py-4
+    .row
+      .col-md-12.text-white
+        h1.display-3.mb-4 Ripetizioni UniTN&nbsp;
+  |         
+  .container.py-1
+    .row
+      .col-md-12
+        p.text-white
+          | Ripetizioni UniTN &egrave; un sito dove puoi offrirti per dare ripetizioni per una certa materia e trovare altri studenti disposti ad offrire ripetizioni
+|     
+.py-5
+  .container
+    .row
+      .col-md-12
+        p
+          | Benvenuto nella Home Page!&nbsp;
+          br
+        |                     
+        ul
+          li
+            | Se sei uno studente che cerca ripetizioni recati nell&apos;area &quot;Cerco ripetizioni&quot; ed inserisci la materia
+          |                         
+          li
+            | Se sei uno studente che offre ripetizioni recati nell&apos;area &quot;Offro ripetizioni&quot; ed inserisci per quale/i materia/e
+|   
+
+hr
+
+#map
+
+include includes/footer.pug
+
+
+script.
+  var map;
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+            lat: 46.066667,
+            lng: 11.133333
+        },
+        zoom: 10
+    });
+  }
+
+  
+script(async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAyPuNc-IQgslbVyEdvq8kCrJvOQSS4Prs&callback=initMap')
+
+
+script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js', integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN', crossorigin='anonymous')
+|     
+script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js', integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4', crossorigin='anonymous')
+|     
+script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js', integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1', crossorigin='anonymous')
