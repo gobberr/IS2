@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 const pug = require('pug');
-var test = require("./test");
 var User = require("../model/user");
 var Corso = require("../model/post");
 var Review = require("../model/review");
@@ -16,8 +15,8 @@ var api = require("./api");
 
 router.get("/", function(req,res,next){
     isLoggedIn(req,res, function(logged) {
-        console.log("logged"+logged);
-        res.write(pug.renderFile("views/index.pug", {logged: logged}));
+        //console.log("logged"+logged);
+        res.status(200).send(pug.renderFile("views/index.pug", {logged: logged}));
     });
 });
 
@@ -30,10 +29,10 @@ router.get("/cerco", function(req,res){
         var subject = "";
         Corso.findPosts(subject, function (error, post) {
             if (error || post.length===0) {
-                console.log("nessun risultato dalla query");
-                res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
+                //console.log("nessun risultato dalla query");
+                res.send(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
             } else {
-                res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
+                res.send(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
             }
             res.end();
         });
@@ -57,11 +56,11 @@ router.post("/cerco", function(req,res){
         Corso.findPosts(subject, function (error, post) {
             if (error || post.length===0) {
                 console.log("nessun risultato dalla query");
-                res.write(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
+                res.send(pug.renderFile("views/cerco.pug", {values: [], logged: logged}));
             } else {
                 //console.log("query success: subject=" + subject + ", post=" + post);
                 if(lat==""||maxDistance=="unl")
-                    res.write(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
+                    res.send(pug.renderFile("views/cerco.pug", {values: post, logged: logged}));
                 else {
                     var post2= [];
                     var a=0;
@@ -76,7 +75,7 @@ router.post("/cerco", function(req,res){
                             a++;
                         }
                     }
-                    res.write(pug.renderFile("views/cerco.pug", {values: post2, logged: logged}));
+                    res.send(pug.renderFile("views/cerco.pug", {values: post2, logged: logged}));
                 }
             }
         });
@@ -85,7 +84,8 @@ router.post("/cerco", function(req,res){
 
 router.get("/login", function(req,res) {
     isLoggedIn(req,res, function(logged) {        
-        res.write(pug.renderFile("views/login.pug", {error: req.query.error, logged: logged}));res.end();
+        res.send(pug.renderFile("views/login.pug", {error: req.query.error, logged: logged}));
+        res.end();
     });
 });
 
@@ -149,8 +149,9 @@ router.post("/sendRequest", function(req,res){
 });
 
 router.get("/registrati", function(req,res){
-    isLoggedIn(req,res, function(logged) {        
-        res.write(pug.renderFile("views/registration.pug", {logged: logged}));
+    isLoggedIn(req,res, function(logged) {
+        console.log(pug.renderFile("views/registration.pug", {logged: logged}));       
+        res.send(pug.renderFile("views/registration.pug", {logged: logged}));
     });
 });
 
@@ -194,7 +195,7 @@ router.post("/registrazione", function(req,res,next){
 
 router.get("/pubblico", function(req,res) {
     isLoggedIn(req,res, function(logged) {
-        res.write(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : [], posts : [], logged: logged}));
+        res.send(pug.renderFile("views/pubblico.pug", {utente : new User, recensioni : [], posts : [], logged: logged}));
     });
 });
 
@@ -205,7 +206,7 @@ router.post("/pubblico", function(req,res) {
         User.findById(userpublic, function(error, user) {
             if(error || !user) {
                 //console.log(error);
-                res.write(pug.renderFile("views/pubblico.pug", {utente : new User, imageDir: "", recensioni : "", posts : [], media : 0, numero : 0, logged: logged}));
+                res.send(pug.renderFile("views/pubblico.pug", {utente : new User, imageDir: "", recensioni : "", posts : [], media : 0, numero : 0, logged: logged}));
             } else {
                 var imageDir="default.png";
                 if (fs.existsSync(__dirname + '/../public/upload/' + user._id + ".jpeg")) {
@@ -217,10 +218,10 @@ router.post("/pubblico", function(req,res) {
 						Corso.findUserPosts(user._id, function(error, post){
                             if (error || !post) {
                                 //console.log(error);
-                                res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : "", posts : [], media : 0, numero : 0, logged: logged}));
+                                res.send(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : "", posts : [], media : 0, numero : 0, logged: logged}));
                             } else {
                                 //console.log(post);
-                                res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : "", posts : post, media : 0, numero : 0, logged: logged}));
+                                res.send(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : "", posts : post, media : 0, numero : 0, logged: logged}));
                                 //res.end();
                             }
                             
@@ -232,10 +233,10 @@ router.post("/pubblico", function(req,res) {
                                 Corso.findUserPosts(user._id, function(error, post){
                                     if (error || !post) {
                                         //console.log(error);
-                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : 0, numero : 0, logged: logged}));
+                                        res.send(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : 0, numero : 0, logged: logged}));
                                     } else {
                                         //console.log(post);
-                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : post, media : 0, numero : 0, logged: logged}));
+                                        res.send(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : post, media : 0, numero : 0, logged: logged}));
                                     }
                                 });
                             } 
@@ -248,10 +249,10 @@ router.post("/pubblico", function(req,res) {
                                 Corso.findUserPosts(user._id, function(error, post){
                                     if (error || !post) {
                                         //console.log(error);
-                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : Math.round((sum/count) * 100) / 100, numero : media.length, logged: logged}));
+                                        res.send(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : [], media : Math.round((sum/count) * 100) / 100, numero : media.length, logged: logged}));
                                     } else {
                                         //console.log(post);
-                                        res.write(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : post, media : Math.round((sum/count) * 100) / 100, numero : media.length, logged: logged}));
+                                        res.send(pug.renderFile("views/pubblico.pug", {utente : user, imageDir: imageDir, recensioni : rs, posts : post, media : Math.round((sum/count) * 100) / 100, numero : media.length, logged: logged}));
                                     }
                                 });
 							}
@@ -290,7 +291,7 @@ router.get("/account", function(req,res,next){
                             if (fs.existsSync(__dirname + '/../public/upload/' + user._id + ".jpeg")) {
                                 imageDir=user._id+".jpeg";
                             }
-                            res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, imageDir: imageDir, descrizione: user.description, pippo:req.query.error_size, pluto:req.query.error_ext, nNotifications: nNotifications, logged: logged}));
+                            res.send(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, skills: user.skills, imageDir: imageDir, descrizione: user.description, pippo:req.query.error_size, pluto:req.query.error_ext, nNotifications: nNotifications, logged: logged}));
                         }
                     }
                 });
@@ -365,7 +366,7 @@ router.post("/account", function(req,res){
                             if (fs.existsSync(__dirname + '/../public/upload/' + user._id + ".jpeg")) {
                                 imageDir=user._id+".jpeg";
                             }
-                            res.write(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, imageDir: imageDir, skills: user.skills, descrizione: user.description, nNotifications: nNotifications, logged: logged}));
+                            res.send(pug.renderFile("views/account.pug", {numero_telefono: user.telephone, email: user.email, imageDir: imageDir, skills: user.skills, descrizione: user.description, nNotifications: nNotifications, logged: logged}));
                         }
                     }
                 });
@@ -376,7 +377,7 @@ router.post("/account", function(req,res){
 
 router.get("/chiSiamo", function(req,res) {
     isLoggedIn(req,res, function(logged) {
-        res.write(pug.renderFile("views/chiSiamo.pug", {logged: logged}));
+        res.send(pug.renderFile("views/chiSiamo.pug", {logged: logged}));
         res.end();
     });
 });
@@ -384,7 +385,7 @@ router.get("/chiSiamo", function(req,res) {
 router.get("/offro", function(req,res){
     isLoggedIn(req,res, function(logged) {
         if(!logged) return res.redirect("/login");        
-        res.write(pug.renderFile("views/offro.pug", {logged: logged}));
+        res.send(pug.renderFile("views/offro.pug", {logged: logged}));
     });
 });
 
@@ -410,7 +411,7 @@ router.post("/offro", function(req,res){
                     return res.redirect('/successfullyCreatedPost');
                 }
             });   
-            //res.write(pug.renderFile("views/offro.pug"));
+            //res.send(pug.renderFile("views/offro.pug"));
         });
     });
 });
@@ -420,16 +421,16 @@ router.post("/ritorna", function(req,res){
 	
 	Corso.findPosts(subject, function (error, post) {
         if (error || post.length===0) {
-			res.write(pug.renderFile("views/cerco.pug", {values: []}));
+			res.send(pug.renderFile("views/cerco.pug", {values: []}));
         } else {
-			res.write(pug.renderFile("views/cerco.pug", {values: post}));
+			res.send(pug.renderFile("views/cerco.pug", {values: post}));
         }
     });
 });
 
 router.get("/annuncio", function(req,res){
     isLoggedIn(req,res, function(logged) {        
-        res.write(pug.renderFile("views/annuncio.pug", {logged: logged}));
+        res.send(pug.renderFile("views/annuncio.pug", {logged: logged}));
     });
 });
 
@@ -447,7 +448,7 @@ router.post("/annuncio", function(req,res){
 		  User.findById(user, function(error, em) {
 		  	if (error || !em) {
 				console.log("\nnessun risultato dalla query utenti");
-				res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: "", utente : new User, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged : logged}));
+				res.send(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: "", utente : new User, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged : logged}));
 		  	} else {
                 var imageDir="default.png";
                 if (fs.existsSync(__dirname + '/../public/upload/' + em._id + ".jpeg")) {
@@ -456,19 +457,19 @@ router.post("/annuncio", function(req,res){
 				Review.findReviewOf(user, function(error, rs) {
 					if (error || rs.length===0) {
 						console.log("\nnessun risultato dalla query recensioni");
-						res.write(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged:logged}));
+						res.send(pug.renderFile("views/annuncio.pug", {recensioni : recensioni, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged:logged}));
                     } else {
 						Review.avg(user, function(error, media) {
 							if (error) {
 								console.log(error);
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged:logged}));
+								res.send(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : 0, numero : 0, latitude: latitude, longitude: longitude, logged:logged}));
 							} else {
 								var sum = 0;
 								var count = media.length;
 								for(var i=0; i<media.length; i++) {
 									sum += media[i].vote;
 								}
-								res.write(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : Math.round((sum/count) * 100) / 100, numero : media.length, latitude: latitude, longitude: longitude, logged:logged}));
+								res.send(pug.renderFile("views/annuncio.pug", {recensioni : rs, imageDir: imageDir, utente : em, anntxt : anntxt, postId: postId, ritorna : ritorna, media : Math.round((sum/count) * 100) / 100, numero : media.length, latitude: latitude, longitude: longitude, logged:logged}));
 							}
 						});
                     }
@@ -507,7 +508,7 @@ router.post("/addreview", function(req,res){
         if(!logged) return res.redirect("/login");    
         var utente = req.body.utente;
         
-        res.write(pug.renderFile("views/add_recensione.pug", {utente: utente, logged: logged}));
+        res.send(pug.renderFile("views/add_recensione.pug", {utente: utente, logged: logged}));
     });
 });
 
@@ -531,7 +532,7 @@ router.post('/upload', function (req, res) {
                 res.redirect("/account?error_size=true");
                 b=true;
                 //maxDimension = true;
-                //res.write(pug.renderFile("views/account.pug", {maxDimension : maxDimension}));
+                //res.send(pug.renderFile("views/account.pug", {maxDimension : maxDimension}));
             }}
         });
         if(!b){
@@ -547,13 +548,13 @@ router.post('/upload', function (req, res) {
                     {
                         if (err) throw err;
                         //succesful = true;                
-                        //res.write(pug.renderFile("views/account.pug", {succesful : succesful}));
+                        //res.send(pug.renderFile("views/account.pug", {succesful : succesful}));
                         res.redirect("/account");                        
                     });
             }
             else{
                 console.log("upload NOT succesful because of file extension not allowed!");
-                //res.write(pug.renderFile("views/account.pug", {extension : extension}));
+                //res.send(pug.renderFile("views/account.pug", {extension : extension}));
                 res.redirect("/account?error_ext=true");                
             }
         }); 
@@ -565,7 +566,7 @@ router.post('/upload', function (req, res) {
 router.get("/successfullyRegistered", function(req,res){
     isLoggedIn(req,res,function(logged){
         var text="Registrazione avvenuta con successo."
-        res.write(pug.renderFile("views/success.pug", {
+        res.send(pug.renderFile("views/success.pug", {
             text: text, logged: logged
         }));
     });
@@ -574,7 +575,7 @@ router.get("/successfullyRegistered", function(req,res){
 router.get("/successfullyRequest", function(req,res){
     isLoggedIn(req,res,function(logged){
         var text="Richiesta ripetizioni avvenuta con successo."
-        res.write(pug.renderFile("views/success.pug", {
+        res.send(pug.renderFile("views/success.pug", {
             text: text, logged: logged
         }));
     });
@@ -583,7 +584,7 @@ router.get("/successfullyRequest", function(req,res){
 router.get("/successfullyCreatedPost", function(req,res){
     isLoggedIn(req,res,function(logged){
         var text="Post creato con successo."
-        res.write(pug.renderFile("views/success.pug", {
+        res.send(pug.renderFile("views/success.pug", {
             text: text, logged: logged
         }));
     });
@@ -595,9 +596,9 @@ router.post("/messages", function(req,res){
         Message.findMessages(req.session.userId, function (error, messages) {
             if (error || messages.length===0) {
                 console.log("nessun risultato dalla query");
-                res.write(pug.renderFile("views/notifications.pug", {messages: [], nNotifications: req.body.nNotifications, logged: logged}));
+                res.send(pug.renderFile("views/notifications.pug", {messages: [], nNotifications: req.body.nNotifications, logged: logged}));
             } else {
-                res.write(pug.renderFile("views/notifications.pug", {messages: messages, nNotifications: req.body.nNotifications, logged: logged}));
+                res.send(pug.renderFile("views/notifications.pug", {messages: messages, nNotifications: req.body.nNotifications, logged: logged}));
             }
         });
     });
@@ -609,9 +610,9 @@ router.get("/messages", function(req,res){
         Message.findMessages(req.session.userId, function (error, messages) {
             if (error || messages.length===0) {
                 console.log("nessun risultato dalla query");
-                res.write(pug.renderFile("views/notifications.pug", {messages: [], nNotifications: 0, logged: logged}));
+                res.send(pug.renderFile("views/notifications.pug", {messages: [], nNotifications: 0, logged: logged}));
             } else {
-                res.write(pug.renderFile("views/notifications.pug", {messages: messages, nNotifications: 0, logged: logged}));
+                res.send(pug.renderFile("views/notifications.pug", {messages: messages, nNotifications: 0, logged: logged}));
             }
         });
     });
@@ -623,9 +624,9 @@ router.post("/messages", function(req,res){
         Message.findMessages(req.session.userId, function (error, messages) {
             if (error || messages.length===0) {
                 console.log("nessun risultato dalla query");
-                res.write(pug.renderFile("views/notifications.pug", {messages: [], nNotifications: req.body.nNotifications, logged: logged}));
+                res.send(pug.renderFile("views/notifications.pug", {messages: [], nNotifications: req.body.nNotifications, logged: logged}));
             } else {
-                res.write(pug.renderFile("views/notifications.pug", {messages: messages, nNotifications: req.body.nNotifications, logged: logged}));
+                res.send(pug.renderFile("views/notifications.pug", {messages: messages, nNotifications: req.body.nNotifications, logged: logged}));
             }
         });
     });
@@ -642,7 +643,6 @@ router.post("/setMessagesReaded", function(req,res){
 
 router.use("/api", api);
 
-router.use("/test", test);
 
 function isLoggedIn(req, res, callback) {
     User.findById(req.session.userId)
@@ -660,5 +660,4 @@ function isLoggedIn(req, res, callback) {
         }
     });
 }
-
 module.exports = router;

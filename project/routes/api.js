@@ -8,22 +8,41 @@ router.get("/byCoordinates", function(req,res){
 
     res.contentType("application/json");
     
-    var lat = req.query.latitudine;
-    var lng = req.query.longitudine;
     
-    var subject = req.query.subject;
-    var maxDistance=req.query.distance;
     
+    var lat = "";
+    var lng = "";
+    var maxDistance = "";
+    var subject = "";
+    
+    if(req.query.latitudine)
+        lat = req.query.latitudine;
+    if(req.query.longitudine)
+        lng = req.query.longitudine;
+    if(req.query.distance)
+        maxDistance=req.query.distance;
+    if(req.query.subject)
+        subject = req.query.subject;
     Corso.findPosts(subject, function (error, post) {
         if (error || post.length===0) {
-            console.log("nessun risultato dalla query");
-            var msg = {message: "Nessun Risultato"};
+            //console.log("nessun risultato dalla query");
+            var msg = {message: "Nessun Risultato dalla materia"};
             res.send(msg);
         } else {
-            //console.log("query success: subject=" + subject + ", post=" + post);
-            if(lat==null||maxDistance=="unl")
+            
+            if((lat!=""&&(lng==""||maxDistance==""))||(lng!=""&&(lat==""||maxDistance==""))||(maxDistance!=""&&(lng==""||lat==""))){
+                var msg = {error: "Campo latitudine, longitudine o distanza mancante"};
+                res.send(msg);
+            }
+            else if((lat==""||lng==""||maxDistance=="")&&subject!=""){
                 res.send(post);
+            }
+            else if((lat==""||lng==""||maxDistance=="")&&subject==""){
+                var msg = {error: "Campo materia, latitudine, longitudine o distanza mancante"};
+                res.send(msg);
+            }
             else {
+                
                 var post2= [];
                 var a=0;
                 
@@ -37,7 +56,14 @@ router.get("/byCoordinates", function(req,res){
                         a++;
                     }
                 }
-                res.send(post2);
+                if(a==0){
+                    var msg = {message: "Nessun risultato dalle coordinate"};
+                    res.send(msg);
+                }
+                else{
+                    
+                    res.send(post2);
+                }
             }
         }
     });
@@ -46,13 +72,13 @@ router.get("/byCoordinates", function(req,res){
 router.get("/allPosts", function(req,res){
     res.contentType("application/json");
     Corso.find({},function(err,post){
-        if(err){
-            console.log("Errore in /allPosts");
+        /*if(err){
+            //console.log("Errore in /allPosts");
             var msg={message:"Errore nella query"}
             res.send(msg);
         }
             
-        else
+        else*/
             res.send(post);
     })
 });

@@ -25,13 +25,12 @@ app.use(session({
 
 app.use('/', route);
 app.get('/', function(req,res){
-  //var luca = new User({name:"pippo", surname:"pluto", email:"topolino@disney.it", password:"PastoLestoDarkPovoGang"});
-  //luca.save(function(err){if(err)throw err; console.log("luca aggiunto")});
-  console.log("debug");
 });
 app.get('*', function(req, res){
     res.sendFile("404.html", { root : "public"})
-  });
-app.listen(3000);
+});
 
+app.listen(3000, () => {
+    console.log('Listening on port 3000!');
+})
 module.exports = app;
