@@ -47,7 +47,7 @@ test('api che trova gli annunci usando una materia e le coordinate',  () => {
 });
 
 test('api che trova gli annunci errore mancanza tutti i dati',  () => {
-    const posts="";
+    const posts={error: "Campo materia, latitudine, longitudine o distanza mancante"};
 
     const latitude="";
     const longitude="";
@@ -55,11 +55,12 @@ test('api che trova gli annunci errore mancanza tutti i dati',  () => {
     const subject="";
     return request(app).get("/api/byCoordinates?latitudine="+latitude+"&longitudine="+longitude+"&distance="+distance+"&subject="+subject)
     .expect('Content-Type', /json/)
+    .expect(posts)
     .expect(200)
 });
 
 test('api che trova gli annunci errore mancanza dati coordinate',  () => {
-    const posts="";
+    const posts={error: "Campo latitudine, longitudine o distanza mancante"};
 
     const latitude="";
     const longitude="11.136673100000053";
@@ -67,11 +68,12 @@ test('api che trova gli annunci errore mancanza dati coordinate',  () => {
     const subject="";
     return request(app).get("/api/byCoordinates?latitudine="+latitude+"&longitudine="+longitude+"&distance="+distance+"&subject="+subject)
     .expect('Content-Type', /json/)
+    .expect(posts)
     .expect(200)
 });
 
 test('api che trova gli annunci errore nessun risultato con una materia',  () => {
-    const posts="";
+    const posts={message: "Nessun Risultato dalla materia"};
 
     const latitude="";
     const longitude="";
@@ -79,11 +81,12 @@ test('api che trova gli annunci errore nessun risultato con una materia',  () =>
     const subject="nkcanksnkc";
     return request(app).get("/api/byCoordinates?latitudine="+latitude+"&longitudine="+longitude+"&distance="+distance+"&subject="+subject)
     .expect('Content-Type', /json/)
+    .expect(posts)
     .expect(200);
 });
 
 test('api che trova gli annunci errore nessun risultato con delle coordinate',  () => {
-    const posts="";
+    const posts={message: "Nessun risultato dalle coordinate"};
 
     const latitude="12";
     const longitude="12";
@@ -91,6 +94,7 @@ test('api che trova gli annunci errore nessun risultato con delle coordinate',  
     const subject="";
     return request(app).get("/api/byCoordinates?latitudine="+latitude+"&longitudine="+longitude+"&distance="+distance+"&subject="+subject)
     .expect('Content-Type', /json/)
+    .expect(posts)
     .expect(200);
 });
 
