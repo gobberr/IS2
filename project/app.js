@@ -15,7 +15,7 @@ mongoose.connect('mongodb://dbprogetto:progettois2@ds145293.mlab.com:45293/prova
 app.use(express.static(path.join(__dirname, 'public/style')));
 app.use(express.static(path.join(__dirname, 'public/img')));
 app.use(express.static(path.join(__dirname, 'public/upload')));
-var User = require("./model/user.js");
+
 
 app.use(session({
   secret: 'work hard',
