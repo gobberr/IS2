@@ -11,7 +11,7 @@
     "geolib": "^2.0.24",
     "mongoose": "^4.13.7",
     "node-fetch": "^1.7.3",
-    "pug": "^2.0.0-rc.4"
+    "pug": "^3.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
